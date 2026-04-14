@@ -1123,7 +1123,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
-              Cash prize
+              £10 Cash prize
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
               6h and 40m left to claim
