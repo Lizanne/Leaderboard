@@ -41,7 +41,7 @@ export default function LeaderboardScreen() {
         className="px-4 pt-5 pb-6"
       >
         <h2 className="text-[20px] font-extrabold leading-7" style={{ color: '#fff' }}>
-          Arise with Aristocrat
+          Giddy Up Leaderboard
         </h2>
 
         <div className="flex items-center gap-3 mt-2">
