@@ -52,7 +52,7 @@ export default function LeaderboardScreen() {
             <span className="text-[12px]" style={{ color: '#fff' }}>★</span>
             <span className="text-[12px] font-semibold leading-4" style={{ color: '#fff' }}>Top 400</span>
           </div>
-          <p className="text-[12px] font-medium leading-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
+          <p className="text-[12px] font-medium leading-4" style={{ color: '#FAFAFA' }}>
             <strong style={{ color: '#fff', fontWeight: 700 }}>2,412</strong> players
           </p>
         </div>
