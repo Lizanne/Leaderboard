@@ -1319,8 +1319,9 @@ function OrangeCard({
 }) {
   const isOptIn = effectiveState === 'opt-in';
   const isQualifying = effectiveState === 'pre-qualified';
-  const isQualified = effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes';
-  const isEndedWon = effectiveState === 'ended-won';
+  const reachedFirst = rank === 1 && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
+  const isQualified = !reachedFirst && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
+  const isEndedWon = effectiveState === 'ended-won' || reachedFirst;
   const isEndedMissed = effectiveState === 'ended-missed';
 
   return (
