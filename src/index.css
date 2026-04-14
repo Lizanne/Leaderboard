@@ -1,0 +1,279 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap');
+
+@theme {
+  /* ─── Colour tokens ─── */
+  --color-hero-bg: #163300;
+  --color-hero-bg-ended: #2a2a2a;
+  --color-hero-eyebrow: #9fe870;
+  --color-hero-amount: #9fe870;
+  --color-hero-text: #ffffff;
+  --color-hero-sub: rgba(255, 255, 255, 0.55);
+
+  --color-surface: #ffffff;
+  --color-background: #f9f9f9;
+  --color-border: #e4e8e0;
+  --color-border-subtle: #f0f3ee;
+
+  --color-text-primary: #18181B;
+  --color-text-secondary: #52525B;
+  --color-text-muted: #a8b8a0;
+
+  --color-cta-primary: #9fe870;
+  --color-cta-primary-text: #163300;
+  --color-cta-dark: #1a3a1a;
+  --color-cta-dark-text: #ffffff;
+  --color-cta-secondary-bg: #f2f5f0;
+  --color-cta-secondary-text: #1a3a1a;
+
+  --color-success: #166534;
+  --color-success-light: #f0fdf4;
+  --color-success-check: #fafafa;
+  --color-success-text: #3a7a10;
+  --color-success-fill: #16a34a;
+
+  --color-urgency-dot: #e67e22;
+  --color-urgency-dot-ended: #8a9880;
+
+  --color-prize-zone: rgba(159, 232, 112, 0.3);
+  --color-marker-outside: #8a9880;
+  --color-marker-inside: #3a7a10;
+
+  --color-tag-locked-bg: #f2f5f0;
+  --color-tag-locked-text: #8a9880;
+  --color-tag-unlocked-bg: rgba(159, 232, 112, 0.15);
+  --color-tag-unlocked-text: #3a7a10;
+  --color-tag-notwon-bg: #f2f5f0;
+  --color-tag-notwon-text: #8a9880;
+
+  --color-in-prizes: #2a6a00;
+  --color-prize-label: #3a7a10;
+
+  /* ─── Spacing tokens ─── */
+  --spacing-card-x: 20px;
+  --spacing-card-y: 24px;
+  --spacing-section-gap: 16px;
+
+  /* ─── Radii ─── */
+  --radius-card: 20px;
+  --radius-button: 24px;
+  --radius-button-sm: 8px;
+  --radius-pill: 12px;
+  --radius-circle: 9999px;
+
+  /* ─── Typography ─── */
+  --font-family-display: 'Figtree', -apple-system, sans-serif;
+  --font-size-hero-title: 22px;
+  --font-size-hero-amount: 32px;
+  --font-size-position: 52px;
+  --font-size-prize-amount: 52px;
+  --font-size-result-rank: 44px;
+  --font-size-body: 14px;
+  --font-size-small: 13px;
+  --font-size-xs: 12px;
+  --font-size-xxs: 11px;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-family-display);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ─── App Store expand transition ─── */
+.expand-purple {
+  transition: opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+              max-height 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+              margin 0.55s cubic-bezier(0.23, 1, 0.32, 1),
+              padding 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+  max-height: 2000px;
+  overflow: hidden;
+}
+.expand-purple.collapsed {
+  opacity: 0;
+  max-height: 0;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.expand-card-wrapper {
+  transition: padding-top 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.expand-card-bg {
+  transition: background 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.2s;
+}
+
+.expand-content-fade {
+  transition: opacity 0.35s ease;
+}
+
+/* ─── Urgency dot pulse ─── */
+@keyframes urgency-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.animate-urgency-pulse {
+  animation: urgency-pulse 2s ease-in-out infinite;
+}
+
+/* ─── Hero gradient mesh shift ─── */
+@keyframes hero-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ─── Hero floating orbs ─── */
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(15px, -10px) scale(1.05); }
+  66% { transform: translate(-10px, 15px) scale(0.95); }
+}
+
+.hero-animated {
+  background-size: 200% 200%;
+  animation: hero-shift 8s ease-in-out infinite;
+}
+.hero-animated.hero-won {
+  animation: hero-shift 6s ease-in-out infinite;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+.hero-orb--primary {
+  width: 180px; height: 180px;
+  top: -70px; right: -50px;
+  background: var(--color-hero-eyebrow);
+  opacity: 0.2;
+  animation: orb-float 6s ease-in-out infinite;
+}
+.hero-orb--secondary {
+  width: 130px; height: 130px;
+  bottom: -50px; left: -30px;
+  background: #6366f1;
+  opacity: 0.15;
+  animation: orb-float 8s ease-in-out infinite reverse;
+}
+.hero-ended .hero-orb { opacity: 0.04; animation: none; }
+
+/* ─── CTA shimmer sweep ─── */
+@keyframes cta-shimmer {
+  0% { transform: translateX(-100%); }
+  60%, 100% { transform: translateX(100%); }
+}
+.cta-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.cta-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transform: translateX(-100%);
+  animation: cta-shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─── Check pop (qualifier done) ─── */
+@keyframes check-pop {
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.animate-check-pop {
+  animation: check-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Qualifier row stagger enter ─── */
+@keyframes row-enter {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-row-enter {
+  animation: row-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-row-enter:nth-child(1) { animation-delay: 0s; }
+.animate-row-enter:nth-child(2) { animation-delay: 0.05s; }
+.animate-row-enter:nth-child(3) { animation-delay: 0.1s; }
+.animate-row-enter:nth-child(4) { animation-delay: 0.15s; }
+
+/* ─── Qualified strip expand ─── */
+@keyframes qualified-enter {
+  from { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; }
+  to { opacity: 1; max-height: 80px; }
+}
+.animate-qualified-enter {
+  animation: qualified-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Score entrance ─── */
+@keyframes score-enter {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-score-enter {
+  animation: score-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Pill entrance ─── */
+@keyframes pill-enter {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-pill-enter {
+  animation: pill-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Won state gold shift ─── */
+@keyframes gold-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gold-shift {
+  background: linear-gradient(135deg, #b8860b, #daa520, #b8860b);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shift 3s ease-in-out infinite;
+}
+
+/* ─── Confetti ─── */
+@keyframes confetti-fall {
+  0% { opacity: 1; transform: translateY(-20px) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translateY(300px) rotate(720deg) scale(0.5); }
+}
+.confetti-piece {
+  position: absolute;
+  border-radius: 2px;
+  animation: confetti-fall 2.5s ease-in forwards;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ─── State enter (delayed fade-up) ─── */
+@keyframes state-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-state-enter {
+  animation: state-enter 0.4s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Card hover polish ─── */
+.card-shell-hover {
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-shell-hover:hover {
+  box-shadow: 0px 24px 32px -4px rgba(10,13,18,0.12), 0px 12px 12px -4px rgba(0,0,0,0.05), 0px 4px 4px -2px rgba(10,13,18,0.06);
+  transform: translateY(-1px);
+}
