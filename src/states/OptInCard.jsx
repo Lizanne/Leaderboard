@@ -902,6 +902,9 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
    ═══════════════════════════════════════════ */
 function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
   const suffix = getOrdinalSuffix(rank);
+  const PRIZE_THRESHOLD = 400;
+  const isInPrizes = rank > 0 && rank <= PRIZE_THRESHOLD;
+  const ptsFromThreshold = Math.abs(score - 2604); // 2604 is the threshold score for top 400
 
   return (
     <>
@@ -944,7 +947,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
             </div>
           </div>
 
-          {/* Stats badges */}
+          {/* Stats badges — dynamic based on position */}
           <div className="flex flex-col gap-3">
             <div className="flex gap-2 flex-wrap">
               <div
@@ -959,12 +962,25 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
                 className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
                 style={{ background: BADGE_BG, height: 20 }}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-                  <path d="M12 5v14M19 12l-7 7-7-7" />
-                </svg>
-                <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                  5 pts behind top 400
-                </span>
+                {isInPrizes ? (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
+                      <path d="M12 19V5M5 12l7-7 7 7" />
+                    </svg>
+                    <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
+                      {ptsFromThreshold} pts ahead top {PRIZE_THRESHOLD}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
+                      <path d="M12 5v14M19 12l-7 7-7-7" />
+                    </svg>
+                    <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
+                      {ptsFromThreshold} pts behind top {PRIZE_THRESHOLD}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -975,7 +991,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
                 <path d="M12 6v6l4 2" />
               </svg>
               <span className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-                Last updated 21 mins ago
+                Last updated just now
               </span>
             </div>
           </div>
@@ -984,7 +1000,6 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
 
       {/* Actions */}
       <div className="flex flex-col gap-3 px-4 pt-6 pb-6">
-        {/* Play now — white tertiary */}
         <motion.button
           onClick={onPlayGame}
           whileTap={{ scale: 0.97 }}
@@ -1000,7 +1015,6 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
           Play now
         </motion.button>
 
-        {/* View leaderboard — secondary transparent */}
         <motion.button
           onClick={onViewLeaderboard}
           whileTap={{ scale: 0.97 }}
@@ -1033,170 +1047,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
               Cash & Free Spins Prizes!
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              Keep in top 400 to win
-            </p>
-          </div>
-          <div
-            className="flex items-center justify-center shrink-0 rounded-lg"
-            style={{ background: 'rgba(0,0,0,0.25)', width: 44, height: 44 }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" />
-              <path d="M7 11V7a5 5 0 0110 0v4" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <Divider />
-      <TermsLinkOrange />
-    </>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   STATE: ENDED WON
-   Hero + countdown(muted) + Prize block + Rewards with Claim + Leaderboard + Terms
-   ═══════════════════════════════════════════ */
-/* ═══════════════════════════════════════════
-   STATE: QUALIFIED RANKED
-   Hero + countdown + Banner + Position with badges + Play + Leaderboard + Rewards + Terms
-   ═══════════════════════════════════════════ */
-function QualifiedRankedState({ rank, score, onPlayGame, onViewLeaderboard }) {
-  const suffix = getOrdinalSuffix(rank);
-
-  return (
-    <>
-      <HeroImage />
-      <CountdownRow text={<>Promotion ends in <strong>14h 42m</strong></>} dotColor="#22c55e" />
-
-      {/* Content — 24px padding, 24px gap */}
-      <div className="px-4 py-6 flex flex-col gap-6">
-        {/* Banner — "All qualifiers met" */}
-        <div className="flex items-start gap-2 p-4 rounded-[10px]" style={{ background: CONTAINER_BG }}>
-          <div
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-            style={{ background: BADGE_BG }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-              <path d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <p className="text-[16px] font-semibold leading-6" style={{ color: PRIMARY_TEXT }}>
-            All qualifiers met
-          </p>
-        </div>
-
-        {/* Position block */}
-        <div className="flex flex-col gap-4">
-          {/* Rank */}
-          <div className="flex flex-col gap-1">
-            <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
-              Your position
-            </p>
-            <div className="flex items-baseline">
-              <span
-                className="text-[48px] font-extrabold leading-[48px]"
-                style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}
-              >
-                {rank}
-              </span>
-              <span className="text-[20px] font-bold leading-[30px]" style={{ color: PRIMARY_TEXT }}>
-                {suffix}
-              </span>
-            </div>
-          </div>
-
-          {/* Stats badges */}
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-2 flex-wrap">
-              <div
-                className="inline-flex items-center rounded-md px-2 py-0.5"
-                style={{ background: BADGE_BG, height: 20 }}
-              >
-                <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                  {score.toLocaleString()} pts
-                </span>
-              </div>
-              <div
-                className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
-                style={{ background: BADGE_BG, height: 20 }}
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-                  <path d="M12 19V5M5 12l7-7 7 7" />
-                </svg>
-                <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                  353 pts ahead top 400
-                </span>
-              </div>
-            </div>
-
-            {/* Last updated */}
-            <div className="flex items-center gap-1">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 6v6l4 2" />
-              </svg>
-              <span className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-                Last updated 21 mins ago
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Actions — 12px gap */}
-      <div className="flex flex-col gap-3 px-4 pt-6 pb-6">
-        {/* Play now — white tertiary */}
-        <motion.button
-          onClick={onPlayGame}
-          whileTap={{ scale: 0.97 }}
-          className="flex w-full items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer border-none"
-          style={{
-            background: '#FAFAFA',
-            color: '#18181b',
-            height: 48,
-            lineHeight: '24px',
-            WebkitTapHighlightColor: 'transparent',
-          }}
-        >
-          Play now
-        </motion.button>
-
-        {/* View leaderboard — secondary transparent */}
-        <motion.button
-          onClick={onViewLeaderboard}
-          whileTap={{ scale: 0.97 }}
-          className="flex w-full items-center justify-center gap-2 rounded-lg text-[16px] font-semibold cursor-pointer border-none bg-transparent"
-          style={{
-            color: '#FAFAFA',
-            height: 48,
-            lineHeight: '24px',
-            WebkitTapHighlightColor: 'transparent',
-          }}
-        >
-          View leaderboard
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-            <path d="M9 6l6 6-6 6" />
-          </svg>
-        </motion.button>
-      </div>
-
-      {/* Rewards — card with lock */}
-      <div className="flex flex-col gap-4 px-4 pb-4">
-        <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
-          Rewards
-        </p>
-        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
-          <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
-            <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
-              Cash & Free Spins Prizes!
-            </p>
-            <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              Keep in top 400 to win
+              Keep in top {PRIZE_THRESHOLD} to win
             </p>
           </div>
           <div
@@ -1227,64 +1078,87 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
   return (
     <>
       <HeroImage />
-      <CountdownRow text={<>Ended · Claim within <strong>3d 22h</strong> or reward expires</>} muted dotColor="rgba(250,250,250,0.4)" />
+      <CountdownRow text={<>Ended · <strong>2</strong> rewards to claim</>} muted dotColor="rgba(250,250,250,0.4)" />
 
-      {/* Prize block */}
+      {/* Position block */}
       <div className="px-4 py-6 flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
             You won
           </p>
-          <p
-            className="text-[48px] font-extrabold leading-[48px]"
-            style={{
-              color: PRIMARY_TEXT,
-              fontVariantNumeric: 'tabular-nums',
-            }}
-          >
-            £10
-          </p>
+          <div className="flex items-baseline">
+            <span
+              className="text-[48px] font-extrabold leading-[48px]"
+              style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}
+            >
+              {rank}
+            </span>
+            <span className="text-[20px] font-bold leading-[30px]" style={{ color: PRIMARY_TEXT }}>
+              {suffix}
+            </span>
+          </div>
         </div>
 
-        {/* Stats badges */}
-        <div className="flex gap-2 flex-wrap">
-          <div
-            className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
-            style={{ background: BADGE_BG, height: 20 }}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 9H4.5a2.5 2.5 0 010-5H6" /><path d="M18 9h1.5a2.5 2.5 0 000-5H18" />
-              <path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22" />
-              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22" />
-              <path d="M18 2H6v7a6 6 0 0012 0V2Z" />
-            </svg>
-            <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-              {rank}{suffix} place
-            </span>
-          </div>
-          <div
-            className="inline-flex items-center rounded-md px-2 py-0.5"
-            style={{ background: BADGE_BG, height: 20 }}
-          >
-            <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-              {score.toLocaleString()} pts
-            </span>
-          </div>
+        {/* Stats badge */}
+        <div
+          className="inline-flex items-center self-start rounded-md px-2 py-0.5"
+          style={{ background: BADGE_BG, height: 20 }}
+        >
+          <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
+            {score.toLocaleString()} pts
+          </span>
         </div>
       </div>
 
-      {/* Rewards — card with Claim button */}
+      {/* Rewards — two cards with Claim buttons */}
       <div className="flex flex-col gap-4 px-4 pb-4">
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
           Rewards
         </p>
+
+        {/* Cash prize card */}
         <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
           <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
             <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
           </div>
-          <p className="flex-1 min-w-0 text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
-            Cash prize
-          </p>
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
+              Cash prize
+            </p>
+            <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
+              6 hrs and 40 min left to claim
+            </p>
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="shrink-0 flex items-center justify-center rounded-lg text-[14px] font-semibold cursor-pointer"
+            style={{
+              background: '#FAFAFA',
+              color: '#18181b',
+              border: 'none',
+              height: 40,
+              paddingLeft: 16,
+              paddingRight: 16,
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            Claim
+          </motion.button>
+        </div>
+
+        {/* Free spins card */}
+        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
+          <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
+            <img src="/game-icon-spins.png" alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
+              10 free spins
+            </p>
+            <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
+              15 hrs and 40 min left to claim
+            </p>
+          </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
             className="shrink-0 flex items-center justify-center rounded-lg text-[14px] font-semibold cursor-pointer"
@@ -1303,7 +1177,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
         </div>
       </div>
 
-      {/* View final results — transparent secondary */}
+      {/* View final results */}
       <div className="px-4 pb-4">
         <motion.button
           onClick={onViewLeaderboard}
@@ -1445,8 +1319,7 @@ function OrangeCard({
 }) {
   const isOptIn = effectiveState === 'opt-in';
   const isQualifying = effectiveState === 'pre-qualified';
-  const isQualified = effectiveState === 'just-qualified' || effectiveState === 'qualified';
-  const isQualifiedRanked = effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes';
+  const isQualified = effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes';
   const isEndedWon = effectiveState === 'ended-won';
   const isEndedMissed = effectiveState === 'ended-missed';
 
@@ -1473,14 +1346,6 @@ function OrangeCard({
       )}
       {isQualified && (
         <QualifiedState
-          rank={rank}
-          score={score}
-          onPlayGame={onPlayGame}
-          onViewLeaderboard={onViewLeaderboard}
-        />
-      )}
-      {isQualifiedRanked && (
-        <QualifiedRankedState
           rank={rank}
           score={score}
           onPlayGame={onPlayGame}

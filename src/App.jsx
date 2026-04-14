@@ -11,12 +11,11 @@ const pageTransition = {
   exit: { opacity: 0, y: -10, scale: 0.97, transition: { duration: 0.3 } },
 };
 
-const STATES = ['opt-in', 'pre-qualified', 'just-qualified', 'qualified-ranked', 'ended-missed', 'ended-won'];
+const STATES = ['opt-in', 'pre-qualified', 'just-qualified', 'ended-missed', 'ended-won'];
 const STATE_LABELS = {
   'opt-in': 'Opt In',
   'pre-qualified': 'Qualifying',
-  'just-qualified': 'Qualified - Unranked',
-  'qualified-ranked': 'Qualified - Ranked',
+  'just-qualified': 'Qualified',
   'ended-missed': 'Ended (No Prize)',
   'ended-won': 'Ended (Won)',
 };
@@ -35,8 +34,9 @@ export default function App() {
   const handleDeposit = useCallback(() => setDeposit((d) => Math.min(20, d + Math.floor(Math.random() * 10) + 5)), []);
   const handlePlay = useCallback(() => setPlay((p) => Math.min(50, p + Math.floor(Math.random() * 18) + 8)), []);
   const handlePlayGame = useCallback(() => {
-    setScore((s) => s + Math.floor(Math.random() * 40) + 5);
-    setRank((r) => Math.max(1, r - Math.floor(Math.random() * 20)));
+    const pts = Math.floor(Math.random() * 80) + 20;
+    setScore((s) => s + pts);
+    setRank((r) => Math.max(1, r - Math.floor(Math.random() * 30) - 5));
   }, []);
   const handleViewLeaderboard = useCallback(() => setView('leaderboard'), []);
   const handleBackFromLeaderboard = useCallback(() => {
@@ -64,7 +64,6 @@ export default function App() {
       case 'opt-in': setDeposit(0); setPlay(0); setScore(0); setRank(314); break;
       case 'pre-qualified': setDeposit(0); setPlay(0); setScore(0); setRank(314); break;
       case 'just-qualified': setDeposit(20); setPlay(50); setScore(892); setRank(412); break;
-      case 'qualified-ranked': setDeposit(20); setPlay(50); setScore(1145); setRank(47); break;
       case 'ended-missed': setDeposit(20); setPlay(50); setScore(4); setRank(47); break;
       case 'ended-won': setDeposit(20); setPlay(50); setScore(1145); setRank(1); break;
     }
