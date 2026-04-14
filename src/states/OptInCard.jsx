@@ -727,7 +727,7 @@ function PreOptInState({ onOptIn }) {
 
       {/* Title + description on orange */}
       <div className="p-4" style={{ background: BRAND_ORANGE, color: PRIMARY_TEXT }}>
-        <p className="text-[20px] font-bold leading-[30px] mb-2">Arise with Aristocrat Leaderboard</p>
+        <p className="text-[20px] font-bold leading-[30px] mb-2">Giddy Up Leaderboard</p>
         <p className="text-[12px] font-normal leading-[18px]" style={{ color: PRIMARY_TEXT }}>
           Opt-in required. Runs 24.02.25 at 09:00 to 05.03.25 at 08:59 (UK time). Points calculated by cash wins over cash stakes (min. £0.10) on selected Aristocrat slots. Eligibility: Min. £20 in deposits & £50 cash staked on slots. Top 200 point scorers will win prizes according to rank within Leaderboard. Prizes awarded automatically by 16:00 on 05.03.25. Claim (max. 1). Award must be used within 4 days after promo period & the wagering fulfilled within 7 days.
         </p>
