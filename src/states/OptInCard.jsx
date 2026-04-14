@@ -1126,7 +1126,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
               Cash prize
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              6 hrs and 40 min left to claim
+              6h and 40m left to claim
             </p>
           </div>
           <motion.button
@@ -1156,7 +1156,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
               10 free spins
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              15 hrs and 40 min left to claim
+              7h and 32m left to claim
             </p>
           </div>
           <motion.button
