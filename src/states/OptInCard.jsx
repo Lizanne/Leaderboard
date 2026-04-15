@@ -904,7 +904,10 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
   const suffix = getOrdinalSuffix(rank);
   const PRIZE_THRESHOLD = 400;
   const isInPrizes = rank > 0 && rank <= PRIZE_THRESHOLD;
-  const ptsFromThreshold = Math.abs(score - 2604); // 2604 is the threshold score for top 400
+  // Dynamic delta: when behind, show how many pts needed; when ahead, show lead
+  const ptsFromThreshold = isInPrizes
+    ? Math.max(1, Math.floor((PRIZE_THRESHOLD - rank) * 3) + 5)
+    : Math.max(1, Math.floor((rank - PRIZE_THRESHOLD) * 3) + 5);
 
   return (
     <>
@@ -958,6 +961,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
                   {score.toLocaleString()} pts
                 </span>
               </div>
+              {(
               <div
                 className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
                 style={{ background: BADGE_BG, height: 20 }}
@@ -982,6 +986,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
                   </>
                 )}
               </div>
+              )}
             </div>
 
             {/* Last updated */}
