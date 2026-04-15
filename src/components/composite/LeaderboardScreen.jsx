@@ -57,7 +57,7 @@ export default function LeaderboardScreen() {
           </p>
         </div>
 
-        <div className="mt-5 rounded-[10px] p-4" style={{ background: 'rgba(9,9,11,0.15)' }}>
+        <div className="mt-5 rounded-[12px] p-4" style={{ background: 'rgba(9,9,11,0.15)' }}>
           <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: '#FAFAFA', letterSpacing: '0.3px' }}>
             Your position
           </p>
