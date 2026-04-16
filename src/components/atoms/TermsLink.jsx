@@ -18,7 +18,7 @@ export default function TermsLink() {
         onBlur={(e) => e.currentTarget.style.boxShadow = 'none'}
         aria-label="View promotion terms and conditions"
       >
-        Terms & conditions
+        Promo terms
       </a>
     </div>
   );

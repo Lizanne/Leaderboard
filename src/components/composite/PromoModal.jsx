@@ -669,7 +669,7 @@ function QualifyingContent({ deposit, play, onDeposit, onPlay, onWithdraw }) {
           onBlur={(e) => e.currentTarget.style.boxShadow = 'none'}
           aria-label="View promotion terms and conditions"
         >
-          Terms & conditions
+          Promo terms
         </a>
       </div>
 

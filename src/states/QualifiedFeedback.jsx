@@ -240,7 +240,7 @@ export default function QualifiedFeedback() {
         {/* Terms */}
         <div className="text-center pt-2.5 pb-3.5 px-4">
           <a className="text-[12px] font-semibold underline" style={{ color: 'var(--color-text-primary)' }}>
-            Terms & conditions
+            Promo terms
           </a>
         </div>
       </div>
