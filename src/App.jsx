@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import LeaderboardScreen from './components/composite/LeaderboardScreen';
 import IOSStatusBar from './components/atoms/IOSStatusBar';
@@ -57,6 +57,8 @@ export default function App() {
   }, []);
 
   const handleJumpState = useCallback((s) => {
+    setLoading(false);
+    loadingRef.current = false;
     setState(s);
     setView('promotions');
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 50);
@@ -64,13 +66,32 @@ export default function App() {
       case 'opt-in': setDeposit(0); setPlay(0); setScore(0); setRank(314); break;
       case 'pre-qualified': setDeposit(0); setPlay(0); setScore(0); setRank(314); break;
       case 'just-qualified': setDeposit(20); setPlay(50); setScore(892); setRank(412); break;
-      case 'ended-missed': setDeposit(20); setPlay(50); setScore(4); setRank(47); break;
+      case 'ended-missed': setDeposit(20); setPlay(50); setScore(4); setRank(412); break;
       case 'ended-won': setDeposit(20); setPlay(50); setScore(1145); setRank(1); break;
     }
   }, []);
 
+  const [loading, setLoading] = useState(false);
+  const loadingRef = useRef(false);
+
+  // When deposit + play both complete during pre-qualified, show loading then switch
+  useEffect(() => {
+    if (state === 'pre-qualified' && deposit >= 20 && play >= 50 && !loadingRef.current) {
+      loadingRef.current = true;
+      setLoading(true);
+      const t = setTimeout(() => {
+        setLoading(false);
+        loadingRef.current = false;
+        setState('just-qualified');
+        setScore(892);
+        setRank(412);
+      }, 2500);
+      return () => { clearTimeout(t); loadingRef.current = false; };
+    }
+  }, [deposit, play, state]);
+
   const effectiveState = (() => {
-    if (state === 'pre-qualified' && deposit >= 20 && play >= 50) return 'just-qualified';
+    if (loading) return 'loading';
     return state;
   })();
 

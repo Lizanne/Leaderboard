@@ -900,6 +900,133 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
    STATE: QUALIFIED (just-qualified / ongoing-in-prizes)
    Hero + countdown + StatusBanner + Position block + Rewards + Leaderboard + Terms
    ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   STATE: LOADING (skeleton)
+   Shows after qualifying while position is being calculated
+   ═══════════════════════════════════════════ */
+function LoadingState() {
+  return (
+    <>
+      <HeroImage />
+      <div className="flex items-center gap-2 px-4 py-2">
+        <div
+          className="animate-urgency-pulse"
+          style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: '#FAFAFA', flexShrink: 0,
+          }}
+        />
+        <p className="text-sm font-medium leading-5" style={{ color: PRIMARY_TEXT }}>
+          Calculating your position...
+        </p>
+      </div>
+
+      <div className="px-4 py-6 flex flex-col gap-6">
+        {/* Banner */}
+        <div className="flex items-start gap-2 p-4 rounded-[10px]" style={{ background: CONTAINER_BG }}>
+          <div
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+            style={{ background: BADGE_BG }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p className="text-[16px] font-semibold leading-6" style={{ color: PRIMARY_TEXT }}>
+            All qualifiers met
+          </p>
+        </div>
+
+        {/* Skeleton position block */}
+        <div className="flex flex-col gap-4">
+          <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
+            Your position
+          </p>
+
+          {/* Large skeleton block for rank */}
+          <div
+            className="relative overflow-hidden rounded-lg"
+            style={{ width: 120, height: 48, background: 'rgba(255,255,255,0.15)' }}
+          >
+            <div
+              style={{
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                background: 'linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%)',
+                backgroundSize: '200% 100%',
+                animation: 'shimmer 1.8s ease-in-out infinite',
+              }}
+            />
+          </div>
+
+          {/* Two smaller skeleton badges */}
+          <div className="flex gap-2">
+            <div
+              className="relative overflow-hidden rounded-md"
+              style={{ width: 64, height: 20, background: 'rgba(255,255,255,0.15)' }}
+            >
+              <div
+                style={{
+                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                  background: 'linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 1.8s ease-in-out infinite',
+                  animationDelay: '0.2s',
+                }}
+              />
+            </div>
+            <div
+              className="relative overflow-hidden rounded-md"
+              style={{ width: 160, height: 20, background: 'rgba(255,255,255,0.15)' }}
+            >
+              <div
+                style={{
+                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                  background: 'linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 1.8s ease-in-out infinite',
+                  animationDelay: '0.4s',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Rewards — card with lock */}
+      <div className="flex flex-col gap-4 px-4 pb-4">
+        <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
+          Rewards
+        </p>
+        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
+          <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
+            <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
+              Cash & Free Spins Prizes!
+            </p>
+            <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
+              Keep in top 400 to win
+            </p>
+          </div>
+          <div
+            className="flex items-center justify-center shrink-0 rounded-lg"
+            style={{ background: 'rgba(0,0,0,0.25)', width: 44, height: 44 }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0110 0v4" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <Divider />
+      <TermsLinkOrange />
+    </>
+  );
+}
+
 function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
   const suffix = getOrdinalSuffix(rank);
   const PRIZE_THRESHOLD = 400;
@@ -1250,26 +1377,29 @@ function EndedNotWonState({ rank, score, onViewLeaderboard }) {
         </div>
       </div>
 
-      {/* Rewards — card with lock */}
+      {/* Rewards */}
       <div className="flex flex-col gap-4 px-4 pb-4">
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
           Rewards
         </p>
-        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
-          <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
-            <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
-          </div>
+        <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
             <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
-              Top 400 received prizes
+              No reward
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              Try again in the next promo
+              Only the top 400 received prizes.
             </p>
           </div>
           <div
-            className="flex items-center justify-center shrink-0 rounded-lg"
-            style={{ background: 'rgba(0,0,0,0.25)', width: 44, height: 44 }}
+            className="flex items-center justify-center shrink-0"
+            style={{
+              background: 'transparent',
+              width: 44,
+              height: 44,
+              borderRadius: 8,
+              border: '2px solid rgba(9,9,11,0.30)',
+            }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
               <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -1323,6 +1453,7 @@ function OrangeCard({
   onWithdraw,
 }) {
   const isOptIn = effectiveState === 'opt-in';
+  const isLoading = effectiveState === 'loading';
   const isQualifying = effectiveState === 'pre-qualified';
   const reachedFirst = rank === 1 && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
   const isQualified = !reachedFirst && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
@@ -1340,6 +1471,9 @@ function OrangeCard({
     >
       {isOptIn && (
         <PreOptInState onOptIn={onOptIn} />
+      )}
+      {isLoading && (
+        <LoadingState />
       )}
       {isQualifying && (
         <QualifyingState

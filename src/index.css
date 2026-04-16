@@ -82,6 +82,12 @@
   }
 }
 
+/* ─── Skeleton shimmer ─── */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ─── App Store expand transition ─── */
 .expand-purple {
   transition: opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1),
