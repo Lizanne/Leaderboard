@@ -11,14 +11,18 @@ const pageTransition = {
   exit: { opacity: 0, y: -10, scale: 0.97, transition: { duration: 0.3 } },
 };
 
-const STATES = ['opt-in', 'pre-qualified', 'just-qualified', 'ended-missed', 'ended-won'];
+const STATES = ['opt-in', 'pre-qualified', 'just-qualified', 'ended-missed', 'ended-won', 'ended-won-2nd', 'ended-won-3rd'];
 const STATE_LABELS = {
   'opt-in': 'Opt In',
   'pre-qualified': 'Qualifying',
   'just-qualified': 'Qualified',
   'ended-missed': 'Ended (No Prize)',
-  'ended-won': 'Ended (Won)',
+  'ended-won': 'Ended Won 1st',
+  'ended-won-2nd': 'Ended Won 2nd',
+  'ended-won-3rd': 'Ended Won 3rd',
 };
+
+const DISMISSED_KEY = 'leaderboard-promo-dismissed';
 
 export default function App() {
   const [state, setState] = useState('opt-in');
@@ -28,8 +32,12 @@ export default function App() {
   const [play, setPlay] = useState(0);
   const [score, setScore] = useState(0);
   const [rank, setRank] = useState(314);
+  const [leaderboardScenario, setLeaderboardScenario] = useState('outside');
+  const [dismissed, setDismissed] = useState(() => {
+    try { return localStorage.getItem(DISMISSED_KEY) === '1'; } catch { return false; }
+  });
 
-  const isEnded = state === 'ended-missed' || state === 'ended-won';
+  const isEnded = state === 'ended-missed' || state === 'ended-won' || state === 'ended-won-2nd' || state === 'ended-won-3rd';
 
   const handleDeposit = useCallback(() => setDeposit((d) => Math.min(20, d + Math.floor(Math.random() * 10) + 5)), []);
   const handlePlay = useCallback(() => setPlay((p) => Math.min(50, p + Math.floor(Math.random() * 18) + 8)), []);
@@ -56,9 +64,16 @@ export default function App() {
     setDeposit(0); setPlay(0); setScore(0); setRank(314);
   }, []);
 
+  const handleDismiss = useCallback(() => {
+    setDismissed(true);
+    try { localStorage.setItem(DISMISSED_KEY, '1'); } catch { /* ignore quota/private mode */ }
+  }, []);
+
   const handleJumpState = useCallback((s) => {
     setLoading(false);
     loadingRef.current = false;
+    setDismissed(false);
+    try { localStorage.removeItem(DISMISSED_KEY); } catch { /* ignore */ }
     setState(s);
     setView('promotions');
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 50);
@@ -68,6 +83,8 @@ export default function App() {
       case 'just-qualified': setDeposit(20); setPlay(50); setScore(892); setRank(412); break;
       case 'ended-missed': setDeposit(20); setPlay(50); setScore(4); setRank(412); break;
       case 'ended-won': setDeposit(20); setPlay(50); setScore(1145); setRank(1); break;
+      case 'ended-won-2nd': setDeposit(20); setPlay(50); setScore(1145); setRank(2); break;
+      case 'ended-won-3rd': setDeposit(20); setPlay(50); setScore(1145); setRank(3); break;
     }
   }, []);
 
@@ -132,7 +149,7 @@ export default function App() {
               </div>
               {/* Scrollable leaderboard content */}
               <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-                <LeaderboardScreen />
+                <LeaderboardScreen scenario={leaderboardScenario} />
               </div>
             </motion.div>
           )}
@@ -156,24 +173,42 @@ export default function App() {
                 onPlayGame={handlePlayGame}
                 onViewLeaderboard={handleViewLeaderboard}
                 onWithdraw={handleWithdraw}
+                onDismiss={handleDismiss}
+                dismissed={dismissed}
               />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* State switcher */}
+      {/* Bottom tabs: state-jumper on promotions view, scenario-jumper on leaderboard view */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-[var(--color-border)] px-3 py-2.5 z-50">
         <div className="flex gap-1.5 overflow-x-auto max-w-[430px] mx-auto">
-          {STATES.map((s) => (
-            <button key={s} onClick={() => handleJumpState(s)}
-              className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer border transition-colors"
-              style={{
-                background: (effectiveState === s || state === s) ? '#18181b' : '#fff',
-                color: (effectiveState === s || state === s) ? '#fff' : '#71717a',
-                borderColor: (effectiveState === s || state === s) ? '#18181b' : '#e4e4e7',
-              }}>{STATE_LABELS[s]}</button>
-          ))}
+          {view === 'leaderboard' ? (
+            [
+              { v: 'outside', label: 'Outside' },
+              { v: 'tier',    label: 'Tier' },
+              { v: 'top10',   label: 'Top 10' },
+            ].map(({ v, label }) => (
+              <button key={v} onClick={() => setLeaderboardScenario(v)}
+                className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer border transition-colors"
+                style={{
+                  background: leaderboardScenario === v ? '#18181b' : '#fff',
+                  color: leaderboardScenario === v ? '#fff' : '#71717a',
+                  borderColor: leaderboardScenario === v ? '#18181b' : '#e4e4e7',
+                }}>{label}</button>
+            ))
+          ) : (
+            STATES.map((s) => (
+              <button key={s} onClick={() => handleJumpState(s)}
+                className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer border transition-colors"
+                style={{
+                  background: (effectiveState === s || state === s) ? '#18181b' : '#fff',
+                  color: (effectiveState === s || state === s) ? '#fff' : '#71717a',
+                  borderColor: (effectiveState === s || state === s) ? '#18181b' : '#e4e4e7',
+                }}>{STATE_LABELS[s]}</button>
+            ))
+          )}
         </div>
       </div>
     </div>

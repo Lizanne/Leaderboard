@@ -116,6 +116,62 @@ function StatusBanner({ children }) {
 }
 
 /* ═══════════════════════════════════════════
+   DISMISSED EMPTY STATE
+   Shown after the player dismisses the Ended-No-Prize card.
+   ═══════════════════════════════════════════ */
+function DismissedEmptyState() {
+  return (
+    <div
+      className="flex flex-col items-center justify-center text-center rounded-xl"
+      style={{
+        background: '#fff',
+        border: '1px solid #e4e4e7',
+        padding: '40px 24px',
+        gap: 12,
+      }}
+      role="status"
+    >
+      <div
+        className="flex items-center justify-center rounded-full"
+        style={{ background: '#f4f4f5', width: 48, height: 48 }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#71717a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
+      </div>
+      <p className="text-[16px] font-semibold leading-6" style={{ color: '#18181b' }}>
+        You&rsquo;re all caught up
+      </p>
+      <p className="text-[14px] font-normal leading-5" style={{ color: '#71717a', maxWidth: 280 }}>
+        No active promotions right now. We&rsquo;ll let you know when something new is on.
+      </p>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   QUALIFIERS-MET BANNER
+   Saved for a future "qualifiers met" milestone screen.
+   ═══════════════════════════════════════════ */
+function QualifiersMetBanner() {
+  return (
+    <div className="flex items-start gap-2 p-4 rounded-[10px]" style={{ background: CONTAINER_BG }}>
+      <div
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+        style={{ background: BADGE_BG }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
+          <path d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <p className="text-[16px] font-semibold leading-6" style={{ color: PRIMARY_TEXT }}>
+        All qualifiers met
+      </p>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
    TERMS LINK (white-on-dark)
    ═══════════════════════════════════════════ */
 function TermsLinkOrange() {
@@ -832,7 +888,7 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
           <p className="text-sm font-bold leading-5 mb-4" style={{ color: PRIMARY_TEXT }}>
             Rewards
           </p>
-          <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(9,9,11,0.25)' }}>
+          <div className="flex items-center gap-3 py-3 rounded-lg">
             <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
               <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
             </div>
@@ -854,28 +910,6 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
               </svg>
             </div>
           </div>
-        </div>
-      </AnimatedReveal>
-
-      {/* Withdraw from promotion */}
-      <AnimatedReveal delay={1000}>
-        <div className="py-4 px-4">
-          <button
-            onClick={() => setShowOptOut(true)}
-            className="text-[16px] font-semibold cursor-pointer border-none rounded-lg w-full"
-            style={{
-              color: SECONDARY_TEXT,
-              background: 'transparent',
-              WebkitTapHighlightColor: 'transparent',
-              height: 48,
-              lineHeight: '24px',
-              transition: 'background 0.15s ease',
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.10)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-          >
-            Opt out of promotion
-          </button>
         </div>
       </AnimatedReveal>
 
@@ -908,88 +942,69 @@ function LoadingState() {
   return (
     <>
       <HeroImage />
-      <div className="flex items-center gap-2 px-4 py-2">
+
+      <div className="flex flex-col gap-5 px-4 py-4">
+        {/* All qualifiers met banner */}
+        <QualifiersMetBanner />
+
+        {/* Loading position card */}
         <div
-          className="animate-urgency-pulse"
-          style={{
-            width: 8, height: 8, borderRadius: '50%',
-            background: '#FAFAFA', flexShrink: 0,
-          }}
-        />
-        <p className="text-sm font-medium leading-5" style={{ color: PRIMARY_TEXT }}>
-          Calculating your position...
-        </p>
-      </div>
-
-      <div className="px-4 py-6 flex flex-col gap-6">
-        {/* Banner */}
-        <div className="flex items-start gap-2 p-4 rounded-[10px]" style={{ background: CONTAINER_BG }}>
-          <div
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-            style={{ background: BADGE_BG }}
+          className="flex flex-col gap-2 rounded-lg p-3"
+          style={{ background: 'rgba(0,0,0,0.12)' }}
+          role="status"
+          aria-live="polite"
+          aria-label="Counting you in. We're working out where you rank against everyone else who's qualified. This can take up to a minute."
+        >
+          <p
+            className="text-[12px] font-semibold leading-4 uppercase"
+            style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-              <path d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <p className="text-[16px] font-semibold leading-6" style={{ color: PRIMARY_TEXT }}>
-            All qualifiers met
-          </p>
-        </div>
-
-        {/* Skeleton position block */}
-        <div className="flex flex-col gap-4">
-          <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
             Your position
           </p>
-
-          {/* Large skeleton block for rank */}
-          <div
-            className="relative overflow-hidden rounded-lg"
-            style={{ width: 120, height: 48, background: 'rgba(255,255,255,0.15)' }}
-          >
-            <div
-              style={{
-                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                background: 'linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%)',
-                backgroundSize: '200% 100%',
-                animation: 'shimmer 1.8s ease-in-out infinite',
-              }}
-            />
-          </div>
-
-          {/* Two smaller skeleton badges */}
-          <div className="flex gap-2">
-            <div
-              className="relative overflow-hidden rounded-md"
-              style={{ width: 64, height: 20, background: 'rgba(255,255,255,0.15)' }}
-            >
-              <div
-                style={{
-                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  background: 'linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 1.8s ease-in-out infinite',
-                  animationDelay: '0.2s',
-                }}
-              />
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-1">
+              <svg
+                className="animate-spin"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FAFAFA"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
+              <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
+                Counting you in...
+              </p>
             </div>
-            <div
-              className="relative overflow-hidden rounded-md"
-              style={{ width: 160, height: 20, background: 'rgba(255,255,255,0.15)' }}
-            >
-              <div
-                style={{
-                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  background: 'linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.08) 50%, transparent 75%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer 1.8s ease-in-out infinite',
-                  animationDelay: '0.4s',
-                }}
-              />
-            </div>
+            <p className="text-[14px] font-normal leading-5" style={{ color: PRIMARY_TEXT }}>
+              We&rsquo;re working out where you rank against everyone else who&rsquo;s qualified. This can take up to a minute.
+            </p>
           </div>
         </div>
+      </div>
+
+      {/* Play here button (disabled during loading) */}
+      <div className="px-4 pb-4">
+        <button
+          disabled
+          aria-disabled="true"
+          className="flex w-full items-center justify-center rounded-lg text-[16px] font-semibold border-none"
+          style={{
+            background: 'rgba(0,0,0,0.25)',
+            color: PRIMARY_TEXT,
+            height: 48,
+            lineHeight: '24px',
+            cursor: 'not-allowed',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+        >
+          Play here
+        </button>
       </div>
 
       {/* Rewards — card with lock */}
@@ -997,7 +1012,7 @@ function LoadingState() {
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
           Rewards
         </p>
-        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
+        <div className="flex items-center gap-3 py-3 rounded-lg">
           <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
             <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
           </div>
@@ -1041,25 +1056,22 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
       <HeroImage />
       <CountdownRow text={<>Promotion ends in <strong>14h 42m</strong></>} dotColor="#22c55e" />
 
-      {/* Content — 24px padding, 24px gap */}
-      <div className="px-4 py-6 flex flex-col gap-6">
-        {/* Banner */}
-        <div className="flex items-start gap-2 p-4 rounded-[10px]" style={{ background: CONTAINER_BG }}>
-          <div
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
-            style={{ background: BADGE_BG }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-              <path d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <p className="text-[16px] font-semibold leading-6" style={{ color: PRIMARY_TEXT }}>
-            All qualifiers met
-          </p>
-        </div>
+      {/* Content — Position block, white-bordered card with sparkles */}
+      <div className="px-4 py-4">
+        <div
+          className="relative flex flex-col gap-4 overflow-hidden rounded-xl p-4"
+          style={{ border: '2px solid #FAFAFA' }}
+        >
+          {/* Sparkles illustration — top-right */}
+          <img
+            src="/qualified-sparkles.png"
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute"
+            style={{ top: 16, right: 16, width: 104, height: 84, objectFit: 'contain' }}
+          />
 
-        {/* Position block */}
-        <div className="flex flex-col gap-4">
+          {/* Title: label + rank */}
           <div className="flex flex-col gap-1">
             <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
               Your position
@@ -1077,21 +1089,20 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
             </div>
           </div>
 
-          {/* Stats badges — dynamic based on position */}
+          {/* Stats: badges + last updated */}
           <div className="flex flex-col gap-3">
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-1 flex-wrap">
               <div
                 className="inline-flex items-center rounded-md px-2 py-0.5"
-                style={{ background: BADGE_BG, height: 20 }}
+                style={{ background: 'rgba(0,0,0,0.5)', height: 20 }}
               >
                 <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
                   {score.toLocaleString()} pts
                 </span>
               </div>
-              {(
               <div
                 className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
-                style={{ background: BADGE_BG, height: 20 }}
+                style={{ background: 'rgba(0,0,0,0.5)', height: 20 }}
               >
                 {isInPrizes ? (
                   <>
@@ -1099,7 +1110,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
                       <path d="M12 19V5M5 12l7-7 7 7" />
                     </svg>
                     <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                      {ptsFromThreshold} pts ahead top {PRIZE_THRESHOLD}
+                      {ptsFromThreshold} places ahead of top {PRIZE_THRESHOLD}
                     </span>
                   </>
                 ) : (
@@ -1108,12 +1119,11 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
                       <path d="M12 5v14M19 12l-7 7-7-7" />
                     </svg>
                     <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                      {ptsFromThreshold} pts behind top {PRIZE_THRESHOLD}
+                      {ptsFromThreshold} places behind top {PRIZE_THRESHOLD}
                     </span>
                   </>
                 )}
               </div>
-              )}
             </div>
 
             {/* Last updated */}
@@ -1137,14 +1147,14 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
           whileTap={{ scale: 0.97 }}
           className="flex w-full items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer border-none"
           style={{
-            background: '#FAFAFA',
-            color: '#18181b',
+            background: 'rgba(0,0,0,0.25)',
+            color: PRIMARY_TEXT,
             height: 48,
             lineHeight: '24px',
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          Play now
+          Play here
         </motion.button>
 
         <motion.button
@@ -1170,7 +1180,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
           Rewards
         </p>
-        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
+        <div className="flex items-center gap-3 py-3 rounded-lg">
           <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
             <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
           </div>
@@ -1203,42 +1213,110 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
 /* ═══════════════════════════════════════════
    STATE: ENDED WON
    Hero + countdown(muted) + Prize block + Rewards with Claim + Leaderboard + Terms
+   Podium visuals vary by rank (1st = gold, 2nd = blue, ...)
    ═══════════════════════════════════════════ */
+const WON_PODIUM_VARIANTS = {
+  1: {
+    gradient: 'linear-gradient(180deg, #fde68a 0%, #f59e0b 100%)',
+    fg: '#78350f',
+    badgeBg: '#78350f',
+    image: '/won-confetti.png',
+    imageW: 74,
+    imageH: 77,
+    direction: 'ahead',
+    comparedTo: '2nd',
+  },
+  2: {
+    gradient: 'linear-gradient(180deg, #bae6fd 0%, #38bdf8 100%)',
+    fg: '#1e3a8a',
+    badgeBg: '#1e3a8a',
+    image: '/won-2nd-confetti.png',
+    imageW: 83,
+    imageH: 77,
+    direction: 'behind',
+    comparedTo: '1st',
+  },
+  3: {
+    gradient: 'linear-gradient(180deg, #ebe8ff 0%, #7e51ff 100%)',
+    fg: '#270a6b',
+    badgeBg: '#270a6b',
+    image: '/won-3rd-stars.png',
+    imageW: 136,
+    imageH: 84,
+    direction: 'behind',
+    comparedTo: '1st',
+  },
+};
+
 function EndedWonState({ rank, score, onViewLeaderboard }) {
   const suffix = getOrdinalSuffix(rank);
+  const variant = WON_PODIUM_VARIANTS[rank] || WON_PODIUM_VARIANTS[1];
+  const arrowPath = variant.direction === 'ahead'
+    ? 'M12 19V5M5 12l7-7 7 7'   // up arrow
+    : 'M12 5v14M5 12l7 7 7-7';  // down arrow
 
   return (
     <>
       <HeroImage />
       <CountdownRow text={<>Ended · <strong>2</strong> rewards to claim</>} muted dotColor="rgba(250,250,250,0.4)" />
 
-      {/* Position block */}
-      <div className="px-4 py-6 flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
-            You won
-          </p>
-          <div className="flex items-baseline">
-            <span
-              className="text-[48px] font-extrabold leading-[48px]"
-              style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}
-            >
-              {rank}
-            </span>
-            <span className="text-[20px] font-bold leading-[30px]" style={{ color: PRIMARY_TEXT }}>
-              {suffix}
-            </span>
-          </div>
-        </div>
-
-        {/* Stats badge */}
+      {/* Position block — gradient card, white border, confetti */}
+      <div className="px-4 py-4">
         <div
-          className="inline-flex items-center self-start rounded-md px-2 py-0.5"
-          style={{ background: BADGE_BG, height: 20 }}
+          className="relative flex flex-col gap-4 overflow-hidden rounded-xl p-4"
+          style={{
+            background: variant.gradient,
+            border: '2px solid #FAFAFA',
+          }}
         >
-          <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-            {score.toLocaleString()} pts
-          </span>
+          {/* Confetti illustration — top-right */}
+          <img
+            src={variant.image}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute"
+            style={{ top: 16, right: 16, width: variant.imageW, height: variant.imageH, objectFit: 'cover' }}
+          />
+
+          <div className="flex flex-col gap-1">
+            <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: variant.fg, letterSpacing: '0.24px' }}>
+              Your position
+            </p>
+            <div className="flex items-baseline">
+              <span
+                className="text-[48px] font-extrabold leading-[48px]"
+                style={{ color: variant.fg, fontVariantNumeric: 'tabular-nums' }}
+              >
+                {rank}
+              </span>
+              <span className="text-[20px] font-bold leading-[30px]" style={{ color: variant.fg }}>
+                {suffix}
+              </span>
+            </div>
+          </div>
+
+          {/* Stats badges — dark accent on gradient */}
+          <div className="flex gap-1 flex-wrap">
+            <div
+              className="inline-flex items-center rounded-md px-2 py-0.5"
+              style={{ background: variant.badgeBg, height: 20 }}
+            >
+              <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
+                {score.toLocaleString()} pts
+              </span>
+            </div>
+            <div
+              className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
+              style={{ background: variant.badgeBg, height: 20 }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
+                <path d={arrowPath} />
+              </svg>
+              <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
+                353 places {variant.direction} of {variant.comparedTo}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1249,7 +1327,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
         </p>
 
         {/* Cash prize card */}
-        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
+        <div className="flex items-center gap-3 py-3 rounded-lg">
           <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
             <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
           </div>
@@ -1263,15 +1341,16 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
-            className="shrink-0 flex items-center justify-center rounded-lg text-[14px] font-semibold cursor-pointer"
+            className="shrink-0 flex items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer"
             style={{
-              background: '#FAFAFA',
-              color: '#18181b',
+              background: 'rgba(0,0,0,0.25)',
+              color: PRIMARY_TEXT,
               border: 'none',
-              height: 40,
+              height: 44,
               paddingLeft: 16,
               paddingRight: 16,
               WebkitTapHighlightColor: 'transparent',
+              boxShadow: '0 1px 2px 0 rgba(10,13,18,0.05)',
             }}
           >
             Claim
@@ -1279,7 +1358,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
         </div>
 
         {/* Free spins card */}
-        <div className="flex items-center gap-3 p-3 rounded-lg" style={{ background: 'rgba(0,0,0,0.25)' }}>
+        <div className="flex items-center gap-3 py-3 rounded-lg">
           <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
             <img src="/game-icon-spins.png" alt="" className="w-full h-full object-cover" />
           </div>
@@ -1293,15 +1372,16 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
-            className="shrink-0 flex items-center justify-center rounded-lg text-[14px] font-semibold cursor-pointer"
+            className="shrink-0 flex items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer"
             style={{
-              background: '#FAFAFA',
-              color: '#18181b',
+              background: 'rgba(0,0,0,0.25)',
+              color: PRIMARY_TEXT,
               border: 'none',
-              height: 40,
+              height: 44,
               paddingLeft: 16,
               paddingRight: 16,
               WebkitTapHighlightColor: 'transparent',
+              boxShadow: '0 1px 2px 0 rgba(10,13,18,0.05)',
             }}
           >
             Claim
@@ -1339,7 +1419,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
    STATE: ENDED NOT WON
    Hero + countdown(muted) + Position block + Rewards(no prize) + Leaderboard + Terms
    ═══════════════════════════════════════════ */
-function EndedNotWonState({ rank, score, onViewLeaderboard }) {
+function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
   const suffix = getOrdinalSuffix(rank);
 
   return (
@@ -1347,33 +1427,38 @@ function EndedNotWonState({ rank, score, onViewLeaderboard }) {
       <HeroImage />
       <CountdownRow text={<>Ended · Results available for <strong>3d 22h</strong></>} muted dotColor="rgba(250,250,250,0.4)" />
 
-      {/* Position block */}
-      <div className="px-4 py-6 flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
-            Your position
-          </p>
-          <div className="flex items-baseline">
-            <span
-              className="text-[48px] font-extrabold leading-[48px]"
-              style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}
-            >
-              {rank}
-            </span>
-            <span className="text-[20px] font-bold leading-[30px]" style={{ color: PRIMARY_TEXT }}>
-              {suffix}
+      {/* Position block — white-bordered card */}
+      <div className="px-4 py-4">
+        <div
+          className="flex flex-col gap-4 overflow-hidden rounded-xl p-4"
+          style={{ border: '2px solid #FAFAFA' }}
+        >
+          <div className="flex flex-col gap-1">
+            <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
+              Your position
+            </p>
+            <div className="flex items-baseline">
+              <span
+                className="text-[48px] font-extrabold leading-[48px]"
+                style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}
+              >
+                {rank}
+              </span>
+              <span className="text-[20px] font-bold leading-[30px]" style={{ color: PRIMARY_TEXT }}>
+                {suffix}
+              </span>
+            </div>
+          </div>
+
+          {/* Stats badge */}
+          <div
+            className="inline-flex items-center self-start rounded-md px-2 py-0.5"
+            style={{ background: 'rgba(0,0,0,0.5)', height: 20 }}
+          >
+            <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
+              {score} pts earned
             </span>
           </div>
-        </div>
-
-        {/* Stats badge */}
-        <div
-          className="inline-flex items-center self-start rounded-md px-2 py-0.5"
-          style={{ background: BADGE_BG, height: 20 }}
-        >
-          <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-            {score} pts earned
-          </span>
         </div>
       </div>
 
@@ -1398,7 +1483,7 @@ function EndedNotWonState({ rank, score, onViewLeaderboard }) {
               width: 44,
               height: 44,
               borderRadius: 8,
-              border: '2px solid rgba(9,9,11,0.30)',
+              border: '2px solid rgba(0,0,0,0.30)',
             }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
@@ -1409,14 +1494,15 @@ function EndedNotWonState({ rank, score, onViewLeaderboard }) {
         </div>
       </div>
 
-      {/* View final results — transparent secondary */}
-      <div className="px-4 pb-4">
+      {/* Actions: View final results (primary) + Dismiss (secondary) */}
+      <div className="flex flex-col gap-3 px-4 py-5">
         <motion.button
           onClick={onViewLeaderboard}
           whileTap={{ scale: 0.97 }}
-          className="flex w-full items-center justify-center gap-2 rounded-lg text-[16px] font-semibold cursor-pointer border-none bg-transparent"
+          className="flex w-full items-center justify-center gap-2 rounded-lg text-[16px] font-semibold cursor-pointer border-none"
           style={{
-            color: '#FAFAFA',
+            background: 'rgba(0,0,0,0.25)',
+            color: PRIMARY_TEXT,
             height: 48,
             lineHeight: '24px',
             WebkitTapHighlightColor: 'transparent',
@@ -1426,6 +1512,21 @@ function EndedNotWonState({ rank, score, onViewLeaderboard }) {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
             <path d="M9 6l6 6-6 6" />
           </svg>
+        </motion.button>
+
+        <motion.button
+          onClick={onDismiss}
+          whileTap={{ scale: 0.97 }}
+          className="flex w-full items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer border-none bg-transparent"
+          style={{
+            color: PRIMARY_TEXT,
+            height: 48,
+            lineHeight: '24px',
+            opacity: 0.9,
+            WebkitTapHighlightColor: 'transparent',
+          }}
+        >
+          Dismiss
         </motion.button>
       </div>
 
@@ -1451,13 +1552,14 @@ function OrangeCard({
   onPlayGame,
   onViewLeaderboard,
   onWithdraw,
+  onDismiss,
 }) {
   const isOptIn = effectiveState === 'opt-in';
   const isLoading = effectiveState === 'loading';
   const isQualifying = effectiveState === 'pre-qualified';
   const reachedFirst = rank === 1 && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
   const isQualified = !reachedFirst && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
-  const isEndedWon = effectiveState === 'ended-won' || reachedFirst;
+  const isEndedWon = effectiveState === 'ended-won' || effectiveState === 'ended-won-2nd' || effectiveState === 'ended-won-3rd' || reachedFirst;
   const isEndedMissed = effectiveState === 'ended-missed';
 
   return (
@@ -1504,6 +1606,7 @@ function OrangeCard({
           rank={rank}
           score={score}
           onViewLeaderboard={onViewLeaderboard}
+          onDismiss={onDismiss}
         />
       )}
     </div>
@@ -1533,7 +1636,11 @@ export default function OptInCard({
   onViewLeaderboard,
   onClose,
   onWithdraw,
+  onDismiss,
+  dismissed,
 }) {
+  const showDismissedEmpty = dismissed && state === 'ended-missed';
+
   return (
     <div style={{ background: '#f4f4f5' }}>
       {/* Header — white bg, back button + title */}
@@ -1553,19 +1660,24 @@ export default function OptInCard({
       </div>
 
       <div className="py-4 px-4 flex flex-col gap-6" style={{ paddingBottom: 80 }}>
-        <OrangeCard
-          effectiveState={effectiveState}
-          rank={rank}
-          score={score}
-          deposit={deposit}
-          play={play}
-          onOptIn={onOptIn}
-          onDeposit={onDeposit}
-          onPlay={onPlay}
-          onPlayGame={onPlayGame}
-          onViewLeaderboard={onViewLeaderboard}
-          onWithdraw={onWithdraw}
-        />
+        {showDismissedEmpty ? (
+          <DismissedEmptyState />
+        ) : (
+          <OrangeCard
+            effectiveState={effectiveState}
+            rank={rank}
+            score={score}
+            deposit={deposit}
+            play={play}
+            onOptIn={onOptIn}
+            onDeposit={onDeposit}
+            onPlay={onPlay}
+            onPlayGame={onPlayGame}
+            onViewLeaderboard={onViewLeaderboard}
+            onWithdraw={onWithdraw}
+            onDismiss={onDismiss}
+          />
+        )}
       </div>
     </div>
   );
