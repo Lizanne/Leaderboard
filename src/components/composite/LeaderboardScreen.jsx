@@ -322,11 +322,17 @@ const YouCardGrid = ({ rank, score, prize, i, innerRef }) => (
         </span>
       </span>
     </span>
-    <span style={{ textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+    <span style={{
+      display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end',
+      fontVariantNumeric: 'tabular-nums', lineHeight: '20px',
+    }}>
       <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 800 }}>{lbFmt(score)}</span>
-      <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 600 }}> pts</span>
+      <span style={{ fontSize: 12, lineHeight: '20px', fontWeight: 600 }}>&nbsp;pts</span>
     </span>
-    <span style={{ textAlign: 'right', fontSize: 14, lineHeight: '20px', fontWeight: 700, color: GOLD }}>
+    <span style={{
+      display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end',
+      fontSize: 14, lineHeight: '20px', fontWeight: 700, color: GOLD,
+    }}>
       {prize}
     </span>
   </motion.div>
