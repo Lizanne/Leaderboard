@@ -596,7 +596,7 @@ function PrizesTab({ state, user }) {
                   <>
                     <span style={{ fontWeight: 600 }}>{p.prize}</span>
                     {isHighlighted && (
-                      <span style={{ fontWeight: 400, color: '#FFFFFF' }}>{' cash'}</span>
+                      <span style={{ fontWeight: 400, color: '#FCD34D' }}>{' cash'}</span>
                     )}
                   </>
                 ) : (
@@ -750,33 +750,62 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
           }}
         >
           <LBAvatar name="You" you size={32} ring="rgba(0,0,0,0.32)" />
-          <span style={{ flex: 1, minWidth: 0 }}>
-            <span style={{ display: 'block', fontSize: 12, fontWeight: 600, lineHeight: '16px', color: '#fff' }}>
-              YOUR POSITION
-            </span>
-            <span style={{ display: 'block', fontSize: 14, lineHeight: '20px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              <span style={{ fontWeight: 700, color: '#A1A1AA' }}>{user.rank}{lbOrdinal(user.rank)}</span>
-              <span style={{ fontWeight: 500, color: '#A1A1AA' }}> · </span>
-              <span style={{ fontWeight: 700, color: '#fff' }}>{lbFmt(user.score)}pts</span>
-            </span>
-          </span>
-          {pinnedActionable ? (
-            <span style={{
-              fontSize: 14, fontWeight: 600,
-              color: '#fff', background: ZINC_700,
-              borderRadius: 8, padding: '8px 12px',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-            }}>Find me</span>
+          {/* Tier + Prizes uses a stacked right column (score + status) per the Figma.
+              Everything else keeps the inline rank · score in the middle. */}
+          {state === 'tier' && tab === 'Prizes' ? (
+            <>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ display: 'block', fontSize: 12, fontWeight: 600, lineHeight: '16px', color: '#fff' }}>
+                  YOUR POSITION
+                </span>
+                <span style={{ display: 'block', fontSize: 14, lineHeight: '20px', fontWeight: 600, color: '#A1A1AA', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {user.rank}{lbOrdinal(user.rank)} place
+                </span>
+              </span>
+              <span style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'flex-end',
+                textAlign: 'right', flexShrink: 0,
+              }}>
+                <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 800, color: '#fff' }}>{lbFmt(user.score)}</span>
+                  <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 600, color: '#fff' }}> pts</span>
+                </span>
+                <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 700, color: '#FCD34D', whiteSpace: 'nowrap' }}>
+                  Winning {userPrize}
+                </span>
+              </span>
+            </>
           ) : (
-            <span style={{
-              fontSize: 14, fontWeight: 600,
-              color: inZone ? GOLD : ZINC_400,
-              textAlign: 'right', whiteSpace: 'nowrap',
-              flexShrink: 0,
-            }}>
-              {inZone ? `Winning ${userPrize}` : 'Not in prize zone'}
-            </span>
+            <>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ display: 'block', fontSize: 12, fontWeight: 600, lineHeight: '16px', color: '#fff' }}>
+                  YOUR POSITION
+                </span>
+                <span style={{ display: 'block', fontSize: 14, lineHeight: '20px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <span style={{ fontWeight: 700, color: '#A1A1AA' }}>{user.rank}{lbOrdinal(user.rank)}</span>
+                  <span style={{ fontWeight: 500, color: '#A1A1AA' }}> · </span>
+                  <span style={{ fontWeight: 700, color: '#fff' }}>{lbFmt(user.score)}pts</span>
+                </span>
+              </span>
+              {pinnedActionable ? (
+                <span style={{
+                  fontSize: 14, fontWeight: 600,
+                  color: '#fff', background: ZINC_700,
+                  borderRadius: 8, padding: '8px 12px',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                }}>Find me</span>
+              ) : (
+                <span style={{
+                  fontSize: 14, fontWeight: 600,
+                  color: inZone ? GOLD : ZINC_400,
+                  textAlign: 'right', whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                }}>
+                  {inZone ? `Winning ${userPrize}` : 'Not in prize zone'}
+                </span>
+              )}
+            </>
           )}
         </button>
         </div>
