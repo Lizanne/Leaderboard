@@ -705,7 +705,7 @@ function RewardsOrange({ status = 'locked', claimAction, onClaim }) {
           </p>
           {isLocked && (
             <p className="text-[11px] font-normal leading-4 mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              Complete all qualifiers
+              Based on your final leaderboard position
             </p>
           )}
         </div>
@@ -811,20 +811,26 @@ function ViewLeaderboardLink({ onViewLeaderboard }) {
 function PreOptInState({ onOptIn }) {
   return (
     <>
-      {/* Hero image — Figma spec: full-width × 295px.
-          - overflow-hidden + display:block + vertical-align:top eliminates the
-            sub-pixel baseline gap that browsers render under inline images
-            (the "white line" you were seeing under the hero).
+      {/* Hero image — uses aspect-ratio sizing so the container height tracks the
+          image's natural 1340:1000 ratio. This guarantees the full image (including
+          the right-side roundel) is visible on every viewport width without cropping.
+          - overflow-hidden + display:block + vertical-align:top kills the sub-pixel
+            baseline gap that browsers render under inline images.
           - container bg matches the orange section below so any rounding gap blends in. */}
       <div
         className="relative w-full shrink-0 overflow-hidden"
-        style={{ height: 295, background: BRAND_ORANGE, lineHeight: 0, fontSize: 0 }}
+        style={{
+          aspectRatio: '1340 / 1000',
+          background: BRAND_ORANGE,
+          lineHeight: 0,
+          fontSize: 0,
+        }}
       >
         <img
           src="/hero-leaderboard.webp"
           alt=""
           aria-hidden="true"
-          className="block w-full h-full max-w-none object-cover pointer-events-none"
+          className="block w-full h-full max-w-none object-contain pointer-events-none"
           style={{
             display: 'block',
             verticalAlign: 'top',
@@ -966,6 +972,13 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
         />
       </div>
 
+      {/* Encouragement line — sits between qualifiers and rewards (Figma 16588:1899) */}
+      <AnimatedReveal delay={REWARDS_DELAY}>
+        <p className="text-[14px] font-normal leading-5 px-4 pt-4" style={{ color: PRIMARY_TEXT }}>
+          You&rsquo;re already earning points. Your position shows once you&rsquo;ve qualified.
+        </p>
+      </AnimatedReveal>
+
       {/* Rewards — card style with lock icon */}
       <AnimatedReveal delay={REWARDS_DELAY}>
         <div className="px-4 pt-4 pb-4">
@@ -981,7 +994,7 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
                 Cash & Free Spins Prizes!
               </p>
               <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-                Complete all qualifiers
+                Based on your final leaderboard position
               </p>
             </div>
             <div
@@ -1105,7 +1118,7 @@ function LoadingState() {
               Cash & Free Spins Prizes!
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              Keep in top 400 to win
+              Keep in the top 400 to get a prize!
             </p>
           </div>
           <div
@@ -1138,7 +1151,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
   return (
     <>
       <HeroImage />
-      <CountdownRow text={<>Promotion ends in <strong>14h 42m</strong></>} dotColor="#22c55e" />
+      <CountdownRow text={<>Leaderboard ends in <strong>14h 42m</strong></>} dotColor="#22c55e" />
 
       {/* Content — Position block, white-bordered card with sparkles */}
       <AnimatedPodium delay={0}>
@@ -1278,7 +1291,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
               Cash & Free Spins Prizes!
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              Keep in top {PRIZE_THRESHOLD} to win
+              Keep in the top {PRIZE_THRESHOLD} to get a prize!
             </p>
           </div>
           <div
@@ -1332,9 +1345,13 @@ const WON_PODIUM_VARIANTS = {
     gradient: 'linear-gradient(180deg, #ebe8ff 0%, #7e51ff 100%)',
     fg: '#270a6b',
     badgeBg: '#270a6b',
-    image: '/won-3rd-stars.png',
+    // Figma 16588:3440 → asset img3rdPlaceIcon1 (magic wand with sparkles)
+    // positioned top:8, right:-16 (extends 16px past the card edge), w:136, h:99.
+    image: '/won-3rd-wand.png',
     imageW: 136,
-    imageH: 84,
+    imageH: 99,
+    imageTop: 8,
+    imageRight: -16,
     direction: 'behind',
     comparedTo: '1st',
   },
@@ -1362,14 +1379,23 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
             border: '2px solid #FAFAFA',
           }}
         >
-          {/* Confetti illustration — top-right */}
-          <img
-            src={variant.image}
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute"
-            style={{ top: 16, right: 16, width: variant.imageW, height: variant.imageH, objectFit: 'cover' }}
-          />
+          {/* Illustration — top-right. Per-variant top offset (3rd uses top:8 per Figma).
+              Omitted entirely on variants without an image. */}
+          {variant.image && (
+            <img
+              src={variant.image}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute"
+              style={{
+                top: variant.imageTop ?? 16,
+                right: variant.imageRight ?? 16,
+                width: variant.imageW,
+                height: variant.imageH,
+                objectFit: 'cover',
+              }}
+            />
+          )}
 
           <div className="flex flex-col gap-1">
             <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: variant.fg, letterSpacing: '0.24px' }}>
@@ -1762,7 +1788,7 @@ export default function OptInCard({
       '/qualified-sparkles.png',
       '/won-confetti.png',
       '/won-2nd-confetti.png',
-      '/won-3rd-stars.png',
+      '/won-3rd-wand.png',
       '/cash-icon.png',
       '/game-icon-spins.png',
     ];

@@ -12,12 +12,12 @@ const INK = '#FAFAFA';
 const AVATAR_BG = '#FAFAFA';
 const AVATAR_INK = '#18181B';
 // YouCard / pinned bar — near-black.
-const CARD_DARK = 'rgba(0,0,0,0.92)';
+const CARD_DARK = 'rgba(0,0,0,0.50)';
+// Backdrop-filter for inline YouCards + pinned player row — frosted-glass effect.
+const CARD_DARK_BLUR = 'blur(27px)';
 const CARD_HAIRLINE = 'inset 0 0 0 1px rgba(255,255,255,0.06)';
 const GOLD = '#F2B544';
 const GOLD_SOFT = '#FFE0B8';
-const ZINC_400 = '#A1A1AA';
-const ZINC_700 = '#3F3F46';
 const DIVIDER = '1px solid rgba(255,255,255,0.10)';
 
 // Three scenarios — one per derivable rank state.
@@ -27,17 +27,19 @@ const SCENARIOS = {
   top10:   { rank: 7,   score: 3292 },
 };
 
+// Player identifiers use a 2-letter prefix + asterisks + 3-digit suffix (CR**620** etc.)
+// — the asterisks are part of the displayed handle, masking the middle of the customer ref.
 const TOP_10 = [
-  { rank: 1,  name: 'LuckyLena',    score: 4218, prize: '£400 cash' },
-  { rank: 2,  name: 'HighRoller_J', score: 3891, prize: '£350 cash' },
-  { rank: 3,  name: 'SpinKing77',   score: 3422, prize: '£300 cash' },
-  { rank: 4,  name: 'MissFortune',  score: 3409, prize: '£250 cash' },
-  { rank: 5,  name: 'AcePilot',     score: 3387, prize: '£200 cash' },
-  { rank: 6,  name: 'GoldRushGus',  score: 3359, prize: '£150 cash' },
-  { rank: 7,  name: 'VelvetVera',   score: 3292, prize: '£125 cash' },
-  { rank: 8,  name: 'BetTheFarm',   score: 3204, prize: '£100 cash' },
-  { rank: 9,  name: 'CherryChase',  score: 2945, prize: '£90 cash' },
-  { rank: 10, name: 'NeonNomad',    score: 2894, prize: '£75 cash' },
+  { rank: 1,  name: 'CR**620**', score: 4218, prize: '£400 cash' },
+  { rank: 2,  name: 'HR**891**', score: 3891, prize: '£350 cash' },
+  { rank: 3,  name: 'SK**422**', score: 3422, prize: '£300 cash' },
+  { rank: 4,  name: 'MF**409**', score: 3409, prize: '£250 cash' },
+  { rank: 5,  name: 'AP**387**', score: 3387, prize: '£200 cash' },
+  { rank: 6,  name: 'GR**359**', score: 3359, prize: '£150 cash' },
+  { rank: 7,  name: 'VV**292**', score: 3292, prize: '£125 cash' },
+  { rank: 8,  name: 'BF**204**', score: 3204, prize: '£100 cash' },
+  { rank: 9,  name: 'CC**945**', score: 2945, prize: '£90 cash' },
+  { rank: 10, name: 'NN**894**', score: 2894, prize: '£75 cash' },
 ];
 
 const TIERS = [
@@ -310,6 +312,8 @@ const YouCardGrid = ({ rank, score, prize, i, innerRef }) => (
       margin: '8px 0',
       borderRadius: 14, position: 'relative',
       background: CARD_DARK, color: '#fff',
+      backdropFilter: CARD_DARK_BLUR,
+      WebkitBackdropFilter: CARD_DARK_BLUR,
       boxShadow: `${CARD_HAIRLINE}, 0 8px 26px rgba(0,0,0,0.35)`,
     }}
   >
@@ -317,7 +321,7 @@ const YouCardGrid = ({ rank, score, prize, i, innerRef }) => (
       <LBAvatar name="You" you size={32} />
       <span style={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0 }}>
         <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 800, textTransform: 'uppercase' }}>You</span>
-        <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 700, color: '#A1A1AA' }}>
+        <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 700, color: '#FFFFFF' }}>
           {rank}{lbOrdinal(rank)} place
         </span>
       </span>
@@ -354,6 +358,8 @@ const YouCardStacked = ({ rank, score, inZone, prize, gap, i, innerRef, showTag 
       margin: '8px 0',
       borderRadius: 14, position: 'relative',
       background: CARD_DARK, color: '#fff',
+      backdropFilter: CARD_DARK_BLUR,
+      WebkitBackdropFilter: CARD_DARK_BLUR,
       boxShadow: `${CARD_HAIRLINE}, 0 8px 26px rgba(0,0,0,0.35)`,
     }}
   >
@@ -362,7 +368,7 @@ const YouCardStacked = ({ rank, score, inZone, prize, gap, i, innerRef, showTag 
       <LBAvatar name="You" you size={32} />
       <span style={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0 }}>
         <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 700, textTransform: 'uppercase' }}>You</span>
-        <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 600, color: '#A1A1AA' }}>
+        <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 600, color: '#FFFFFF' }}>
           {rank}{lbOrdinal(rank)} place
         </span>
       </span>
@@ -572,6 +578,8 @@ function PrizesTab({ state, user }) {
                 borderRadius: isHighlighted ? 12 : 0,
                 borderBottom: isHighlighted ? 'none' : DIVIDER,
                 background: isHighlighted ? CARD_DARK : 'transparent',
+                backdropFilter: isHighlighted ? CARD_DARK_BLUR : undefined,
+                WebkitBackdropFilter: isHighlighted ? CARD_DARK_BLUR : undefined,
                 color: '#FFFFFF',
                 position: 'relative',
               }}
@@ -696,9 +704,6 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
               <StarIcon size={12} color="#fff" />
               <span className="text-[12px] font-semibold leading-4" style={{ color: '#fff' }}>Top {PRIZE_THRESHOLD}</span>
             </div>
-            <p className="text-[12px] leading-4" style={{ color: '#FAFAFA' }}>
-              <strong style={{ color: '#fff', fontWeight: 700 }}>{lbFmt(TOTAL_PLAYERS)}</strong> players
-            </p>
           </div>
 
         </motion.div>
@@ -757,6 +762,8 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
             margin: 0, padding: 12,
             border: 'none', borderRadius: 12,
             background: CARD_DARK, color: '#fff',
+            backdropFilter: CARD_DARK_BLUR,
+            WebkitBackdropFilter: CARD_DARK_BLUR,
             display: 'flex', alignItems: 'center', gap: 8,
             boxShadow: '0 8px 13px rgba(0,0,0,0.35)',
             cursor: pinnedActionable ? 'pointer' : 'default',
@@ -775,7 +782,7 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
                 <span style={{ display: 'block', fontSize: 12, fontWeight: 600, lineHeight: '16px', color: '#fff' }}>
                   YOUR POSITION
                 </span>
-                <span style={{ display: 'block', fontSize: 14, lineHeight: '20px', fontWeight: 600, color: '#A1A1AA', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span style={{ display: 'block', fontSize: 14, lineHeight: '20px', fontWeight: 600, color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {user.rank}{lbOrdinal(user.rank)} place
                 </span>
               </span>
@@ -799,15 +806,15 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
                   YOUR POSITION
                 </span>
                 <span style={{ display: 'block', fontSize: 14, lineHeight: '20px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  <span style={{ fontWeight: 700, color: '#A1A1AA' }}>{user.rank}{lbOrdinal(user.rank)}</span>
-                  <span style={{ fontWeight: 500, color: '#A1A1AA' }}> · </span>
+                  <span style={{ fontWeight: 700, color: '#FFFFFF' }}>{user.rank}{lbOrdinal(user.rank)}</span>
+                  <span style={{ fontWeight: 500, color: '#FFFFFF' }}> · </span>
                   <span style={{ fontWeight: 700, color: '#fff' }}>{lbFmt(user.score)}pts</span>
                 </span>
               </span>
               {pinnedActionable ? (
                 <span style={{
                   fontSize: 14, fontWeight: 600,
-                  color: '#fff', background: ZINC_700,
+                  color: '#18181B', background: '#F4F4F5',
                   borderRadius: 8, padding: '8px 12px',
                   whiteSpace: 'nowrap',
                   flexShrink: 0,
@@ -815,7 +822,7 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
               ) : (
                 <span style={{
                   fontSize: 14, fontWeight: 600,
-                  color: inZone ? GOLD : ZINC_400,
+                  color: inZone ? GOLD : '#FFFFFF',
                   textAlign: 'right', whiteSpace: 'nowrap',
                   flexShrink: 0,
                 }}>
