@@ -974,8 +974,8 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
 
       {/* Encouragement line — sits between qualifiers and rewards (Figma 16588:1899) */}
       <AnimatedReveal delay={REWARDS_DELAY}>
-        <p className="text-[14px] font-normal leading-5 px-4 pt-4" style={{ color: PRIMARY_TEXT }}>
-          You&rsquo;re already earning points. Your position shows once you&rsquo;ve qualified.
+        <p className="text-[14px] font-normal leading-5 px-4 pt-4 w-full" style={{ color: PRIMARY_TEXT, maxWidth: 'none' }}>
+          To appear in the rankings, you must qualify first. Your play will still contribute to the leaderboard whilst qualifying.
         </p>
       </AnimatedReveal>
 
@@ -1142,11 +1142,6 @@ function LoadingState() {
 function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
   const suffix = getOrdinalSuffix(rank);
   const PRIZE_THRESHOLD = 400;
-  const isInPrizes = rank > 0 && rank <= PRIZE_THRESHOLD;
-  // Dynamic delta: when behind, show how many pts needed; when ahead, show lead
-  const ptsFromThreshold = isInPrizes
-    ? Math.max(1, Math.floor((PRIZE_THRESHOLD - rank) * 3) + 5)
-    : Math.max(1, Math.floor((rank - PRIZE_THRESHOLD) * 3) + 5);
 
   return (
     <>
@@ -1197,30 +1192,6 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
                 <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
                   {score.toLocaleString()} pts
                 </span>
-              </div>
-              <div
-                className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
-                style={{ background: 'rgba(0,0,0,0.5)', height: 20 }}
-              >
-                {isInPrizes ? (
-                  <>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-                      <path d="M12 19V5M5 12l7-7 7 7" />
-                    </svg>
-                    <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                      {ptsFromThreshold} places ahead of top {PRIZE_THRESHOLD}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-                      <path d="M12 5v14M19 12l-7 7-7-7" />
-                    </svg>
-                    <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                      {ptsFromThreshold} places behind top {PRIZE_THRESHOLD}
-                    </span>
-                  </>
-                )}
               </div>
             </div>
 
@@ -1360,9 +1331,6 @@ const WON_PODIUM_VARIANTS = {
 function EndedWonState({ rank, score, onViewLeaderboard }) {
   const suffix = getOrdinalSuffix(rank);
   const variant = WON_PODIUM_VARIANTS[rank] || WON_PODIUM_VARIANTS[1];
-  const arrowPath = variant.direction === 'ahead'
-    ? 'M12 19V5M5 12l7-7 7 7'   // up arrow
-    : 'M12 5v14M5 12l7 7 7-7';  // down arrow
 
   return (
     <>
@@ -1422,17 +1390,6 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
             >
               <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
                 {score.toLocaleString()} pts
-              </span>
-            </div>
-            <div
-              className="inline-flex items-center gap-1 rounded-md px-2 py-0.5"
-              style={{ background: variant.badgeBg, height: 20 }}
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
-                <path d={arrowPath} />
-              </svg>
-              <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
-                353 places {variant.direction} of {variant.comparedTo}
               </span>
             </div>
           </div>
