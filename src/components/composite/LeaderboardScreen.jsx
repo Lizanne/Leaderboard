@@ -594,8 +594,8 @@ function PrizesTab({ state, user }) {
                   <span style={{
                     fontSize: 11, fontWeight: 600, letterSpacing: '0.04em',
                     color: '#FFFFFF',
-                    background: 'rgba(255,255,255,0.08)',
-                    border: '1px solid rgba(255,255,255,0.30)',
+                    background: '#27272A',
+                    border: 'none',
                     borderRadius: 6,
                     padding: '2px 8px',
                     lineHeight: 1,
