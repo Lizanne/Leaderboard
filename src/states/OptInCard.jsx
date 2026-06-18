@@ -61,7 +61,7 @@ function HeroImage() {
   return (
     <div className="relative w-full" style={{ height: 268, overflow: 'hidden' }}>
       <img
-        src="/hero-leaderboard.jpg"
+        src="/hero-leaderboard.webp"
         alt=""
         className="w-full h-full object-cover"
         style={{ display: 'block' }}
@@ -821,7 +821,7 @@ function PreOptInState({ onOptIn }) {
         style={{ height: 295, background: BRAND_ORANGE, lineHeight: 0, fontSize: 0 }}
       >
         <img
-          src="/hero-leaderboard.jpg"
+          src="/hero-leaderboard.webp"
           alt=""
           aria-hidden="true"
           className="block w-full h-full max-w-none object-cover pointer-events-none"
