@@ -811,19 +811,49 @@ function ViewLeaderboardLink({ onViewLeaderboard }) {
 function PreOptInState({ onOptIn }) {
   return (
     <>
-      {/* Hero image */}
-      <div className="relative w-full" style={{ height: 268, overflow: 'hidden' }}>
+      {/* Hero image — Figma spec: full-width × 295px.
+          - overflow-hidden + display:block + vertical-align:top eliminates the
+            sub-pixel baseline gap that browsers render under inline images
+            (the "white line" you were seeing under the hero).
+          - container bg matches the orange section below so any rounding gap blends in. */}
+      <div
+        className="relative w-full shrink-0 overflow-hidden"
+        style={{ height: 295, background: BRAND_ORANGE, lineHeight: 0, fontSize: 0 }}
+      >
         <img
           src="/hero-leaderboard.jpg"
           alt=""
-          className="w-full h-full object-cover"
-          style={{ display: 'block' }}
+          aria-hidden="true"
+          className="block w-full h-full max-w-none object-cover pointer-events-none"
+          style={{
+            display: 'block',
+            verticalAlign: 'top',
+            border: 'none',
+            margin: 0,
+            padding: 0,
+          }}
         />
       </div>
 
-      {/* Title + description + terms — all on orange */}
-      <div className="p-4 flex flex-col gap-2" style={{ background: BRAND_ORANGE, color: PRIMARY_TEXT }}>
-        <p className="text-[20px] font-bold leading-[30px]">Giddy Up Leaderboard</p>
+      {/* Title + description + terms — all on orange.
+          marginTop: -1 makes this section overlap the hero by 1px so any
+          subpixel rounding gap (where the white OrangeCard wrapper would
+          otherwise peek through as a thin line above the title) is hidden. */}
+      <div
+        className="p-4 flex flex-col gap-2"
+        style={{
+          background: BRAND_ORANGE,
+          color: PRIMARY_TEXT,
+          border: 'none',
+          borderTopColor: 'transparent',
+          borderTopWidth: 0,
+          borderTopStyle: 'none',
+          marginTop: -1,
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        <p className="text-[20px] font-bold leading-[30px]">Giddy up for Cash &amp; Free Spins!</p>
 
         {/* Description block + divider + terms */}
         <div className="flex flex-col gap-3">
