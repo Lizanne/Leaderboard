@@ -452,7 +452,7 @@ function AnimatedReveal({ delay = 0, children }) {
       animateElement(el, [
         { opacity: 0, transform: 'translateY(12px)' },
         { opacity: 1, transform: 'translateY(0)' },
-      ], { duration: 350, easing: SETTLE });
+      ], { duration: 300, easing: SETTLE });
     }, delay);
 
     return () => clearTimeout(t);
@@ -771,7 +771,7 @@ function ViewLeaderboardLink({ onViewLeaderboard }) {
 function PreOptInState({ onOptIn }) {
   return (
     <>
-      {/* Hero image — no blur, sits on white card bg above the orange section */}
+      {/* Hero image */}
       <div className="relative w-full" style={{ height: 268, overflow: 'hidden' }}>
         <img
           src="/hero-leaderboard.jpg"
@@ -781,29 +781,43 @@ function PreOptInState({ onOptIn }) {
         />
       </div>
 
-      {/* Title + description on orange */}
-      <div className="p-4" style={{ background: BRAND_ORANGE, color: PRIMARY_TEXT }}>
-        <p className="text-[20px] font-bold leading-[30px] mb-2">Giddy Up Leaderboard</p>
-        <p className="text-[12px] font-normal leading-[18px]" style={{ color: PRIMARY_TEXT }}>
-          Opt-in required. Runs 24.02.25 at 09:00 to 05.03.25 at 08:59 (UK time). Points calculated by cash wins over cash stakes (min. £0.10) on selected Aristocrat slots. Eligibility: Min. £20 in deposits & £50 cash staked on slots. Top 200 point scorers will win prizes according to rank within Leaderboard. Prizes awarded automatically by 16:00 on 05.03.25. Claim (max. 1). Award must be used within 4 days after promo period & the wagering fulfilled within 7 days.
-        </p>
-      </div>
+      {/* Title + description + terms — all on orange */}
+      <div className="p-4 flex flex-col gap-2" style={{ background: BRAND_ORANGE, color: PRIMARY_TEXT }}>
+        <p className="text-[20px] font-bold leading-[30px]">Giddy Up Leaderboard</p>
 
-      {/* Dashed divider */}
-      <div style={{ background: BRAND_ORANGE }}>
-        <div style={{ height: 1, background: 'rgba(255,255,255,0.15)', margin: '0 16px' }} />
+        {/* Description block + divider + terms */}
+        <div className="flex flex-col gap-3">
+          {/* Marketing description — 14px/20px medium with bold emphasis */}
+          <p className="text-[14px] font-medium leading-5" style={{ color: PRIMARY_TEXT }}>
+            Gee up for the <strong className="font-bold">Royal Ascot</strong> with a course of{' '}
+            <strong className="font-bold">Cash</strong> or <strong className="font-bold">Free Spins</strong>{' '}
+            up for grabs right out of the gate in our daily{' '}
+            <strong className="font-bold">Giddy Up Leaderboards</strong>. Score your way to a share of a marvelous{' '}
+            <strong className="font-bold">daily £1K Prize Pool</strong> simply by playing your favourite{' '}
+            <strong className="font-bold">Pragmatic Play slots</strong>, with selected games scoring double points!
+          </p>
+
+          {/* Thin divider between description and legal terms */}
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.20)' }} />
+
+          {/* Legal terms — 12px/16px regular */}
+          <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
+            Claim (max. 1) within 72h of issue. No deposit required. Free Spins awarded (£0.20/spin) on Book of the full Moon. Use within 4 days of claim &amp; 10x wagering fulfilled within 7 days. £1,000 max. redemption on winnings. Game eligibility &amp; contributions vary. £0.10 to £5 bet range.
+          </p>
+        </div>
       </div>
 
       {/* Opt in button */}
-      <div className="px-4 pt-4 pb-4" style={{ background: BRAND_ORANGE }}>
+      <div className="px-4 pb-4" style={{ background: BRAND_ORANGE }}>
         <motion.button
           onClick={onOptIn}
           whileTap={{ scale: 0.96 }}
           className="w-full rounded-lg text-[16px] font-bold border-none flex items-center justify-center"
           style={{
-            background: 'rgba(0,0,0,0.3)',
+            background: 'rgba(0,0,0,0.25)',
             color: PRIMARY_TEXT,
-            height: 48,
+            padding: '12px 18px',
+            lineHeight: '24px',
             cursor: 'pointer',
           }}
         >
@@ -838,9 +852,9 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
   const [showOptOut, setShowOptOut] = useState(false);
 
   const OPT_IN_DELAY = 0;
-  const DEPOSIT_DELAY = 250;
-  const PLAY_DELAY = 500;
-  const REWARDS_DELAY = 750;
+  const DEPOSIT_DELAY = 150;
+  const PLAY_DELAY = 300;
+  const REWARDS_DELAY = 450;
 
   const depositProgress = Math.min(100, (deposit / 20) * 100);
   const playProgress = Math.min(100, (play / 50) * 100);
@@ -913,7 +927,7 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
         </div>
       </AnimatedReveal>
 
-      <AnimatedReveal delay={1150}>
+      <AnimatedReveal delay={650}>
         <Divider />
         <TermsLinkOrange />
       </AnimatedReveal>

@@ -727,16 +727,27 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
       {/* Spacer so the sticky pinned bar (when present) clears the state-jumper at the bottom */}
       <div style={{ height: showPinnedBar ? 0 : 80 }} />
 
-      {/* Pinned "Your Position" bar — outside only.
+      {/* Pinned "Your Position" bar — outside + tier.
           Uses position: sticky so it survives the parent's motion.div transform
-          (a fixed bar gets containing-block clipped during page-slide transitions). */}
+          (a fixed bar gets containing-block clipped during page-slide transitions).
+          Animated in after the leaderboard rows have started staggering, so it
+          doesn't pop in before the table — smoother page-arrival UX. */}
       {showPinnedBar && (
-        <div style={{
-          position: 'sticky', bottom: 72, zIndex: 50,
-          padding: '0 12px',
-          marginTop: 12,
-          pointerEvents: 'none',
-        }}>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.35,
+            delay: SLIDE_IN_DURATION + 0.35,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          style={{
+            position: 'sticky', bottom: 'calc(72px + env(safe-area-inset-bottom, 0px))', zIndex: 50,
+            padding: '0 12px',
+            marginTop: 12,
+            pointerEvents: 'none',
+          }}
+        >
         <button
           onClick={pinnedActionable ? findMe : undefined}
           aria-hidden={pinnedBarHidden}
@@ -814,7 +825,7 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
             </>
           )}
         </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );

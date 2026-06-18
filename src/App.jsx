@@ -181,8 +181,13 @@ export default function App() {
         </AnimatePresence>
       </div>
 
-      {/* Bottom tabs: state-jumper on promotions view, scenario-jumper on leaderboard view */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-[var(--color-border)] px-3 py-2.5 z-50">
+      {/* Bottom tabs: state-jumper on promotions view, scenario-jumper on leaderboard view.
+          paddingBottom adds the iOS safe-area inset so the tabs (and the leaderboard pinned bar
+          above them) clear the home indicator on real devices. */}
+      <div
+        className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-[var(--color-border)] px-3 pt-2.5 z-50"
+        style={{ paddingBottom: 'calc(0.625rem + env(safe-area-inset-bottom, 0px))' }}
+      >
         <div className="flex gap-1.5 overflow-x-auto max-w-[430px] mx-auto">
           {view === 'leaderboard' ? (
             [
