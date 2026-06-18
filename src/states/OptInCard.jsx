@@ -1678,6 +1678,7 @@ function OrangeCard({
       )}
       {isEndedWon && (
         <EndedWonState
+          key={`ended-won-${rank}`}
           rank={rank}
           score={score}
           onViewLeaderboard={onViewLeaderboard}
