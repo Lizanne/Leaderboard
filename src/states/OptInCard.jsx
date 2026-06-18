@@ -465,6 +465,46 @@ function AnimatedReveal({ delay = 0, children }) {
   );
 }
 
+// Celebration entrance — scale-pop with overshoot easing.
+// Used for the "hero" position card on Qualified / Ended-Won states so it feels
+// rewarding instead of static. EndedNotWon uses AnimatedReveal (no scale-pop).
+function AnimatedPodium({ delay = 0, children }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (prefersReducedMotion()) {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      return;
+    }
+
+    el.style.opacity = '0';
+    el.style.transform = 'scale(0.88) translateY(8px)';
+
+    const t = setTimeout(() => {
+      animateElement(el, [
+        { opacity: 0, transform: 'scale(0.88) translateY(8px)' },
+        { opacity: 1, transform: 'scale(1) translateY(0)' },
+      ], {
+        duration: 560,
+        // Slight overshoot — feels like the card lands with weight.
+        easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      });
+    }, delay);
+
+    return () => clearTimeout(t);
+  }, [delay]);
+
+  return (
+    <div ref={ref} style={{ opacity: 0, transform: 'scale(0.88) translateY(8px)', transformOrigin: 'center' }}>
+      {children}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════
    OPT-OUT CONFIRMATION DIALOG
    (centered white dialog over card, blurred backdrop)
@@ -1071,6 +1111,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
       <CountdownRow text={<>Promotion ends in <strong>14h 42m</strong></>} dotColor="#22c55e" />
 
       {/* Content — Position block, white-bordered card with sparkles */}
+      <AnimatedPodium delay={0}>
       <div className="px-4 py-4">
         <div
           className="relative flex flex-col gap-4 overflow-hidden rounded-xl p-4"
@@ -1153,8 +1194,10 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
           </div>
         </div>
       </div>
+      </AnimatedPodium>
 
       {/* Actions */}
+      <AnimatedReveal delay={200}>
       <div className="flex flex-col gap-3 px-4 pt-6 pb-6">
         <motion.button
           onClick={onPlayGame}
@@ -1188,8 +1231,10 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
           </svg>
         </motion.button>
       </div>
+      </AnimatedReveal>
 
       {/* Rewards — card with lock */}
+      <AnimatedReveal delay={400}>
       <div className="flex flex-col gap-4 px-4 pb-4">
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
           Rewards
@@ -1217,9 +1262,12 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
           </div>
         </div>
       </div>
+      </AnimatedReveal>
 
+      <AnimatedReveal delay={550}>
       <Divider />
       <TermsLinkOrange />
+      </AnimatedReveal>
     </>
   );
 }
@@ -1275,6 +1323,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
       <CountdownRow text={<>Ended · <strong>2</strong> rewards to claim</>} muted dotColor="rgba(250,250,250,0.4)" />
 
       {/* Position block — gradient card, white border, confetti */}
+      <AnimatedPodium delay={0}>
       <div className="px-4 py-4">
         <div
           className="relative flex flex-col gap-4 overflow-hidden rounded-xl p-4"
@@ -1333,14 +1382,18 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
           </div>
         </div>
       </div>
+      </AnimatedPodium>
 
       {/* Rewards — two cards with Claim buttons */}
       <div className="flex flex-col gap-4 px-4 pb-4">
+        <AnimatedReveal delay={250}>
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
           Rewards
         </p>
+        </AnimatedReveal>
 
         {/* Cash prize card */}
+        <AnimatedReveal delay={350}>
         <div className="flex items-center gap-3 py-3 rounded-lg">
           <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
             <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
@@ -1370,8 +1423,10 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
             Claim
           </motion.button>
         </div>
+        </AnimatedReveal>
 
         {/* Free spins card */}
+        <AnimatedReveal delay={450}>
         <div className="flex items-center gap-3 py-3 rounded-lg">
           <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
             <img src="/game-icon-spins.png" alt="" className="w-full h-full object-cover" />
@@ -1401,9 +1456,11 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
             Claim
           </motion.button>
         </div>
+        </AnimatedReveal>
       </div>
 
       {/* View final results */}
+      <AnimatedReveal delay={600}>
       <div className="px-4 pb-4">
         <motion.button
           onClick={onViewLeaderboard}
@@ -1422,9 +1479,12 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
           </svg>
         </motion.button>
       </div>
+      </AnimatedReveal>
 
+      <AnimatedReveal delay={750}>
       <Divider />
       <TermsLinkOrange />
+      </AnimatedReveal>
     </>
   );
 }
@@ -1442,6 +1502,7 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
       <CountdownRow text={<>Ended · Results available for <strong>3d 22h</strong></>} muted dotColor="rgba(250,250,250,0.4)" />
 
       {/* Position block — white-bordered card */}
+      <AnimatedReveal delay={0}>
       <div className="px-4 py-4">
         <div
           className="flex flex-col gap-4 overflow-hidden rounded-xl p-4"
@@ -1475,8 +1536,10 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
           </div>
         </div>
       </div>
+      </AnimatedReveal>
 
       {/* Rewards */}
+      <AnimatedReveal delay={200}>
       <div className="flex flex-col gap-4 px-4 pb-4">
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
           Rewards
@@ -1507,8 +1570,10 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
           </div>
         </div>
       </div>
+      </AnimatedReveal>
 
       {/* Actions: View final results (primary) + Dismiss (secondary) */}
+      <AnimatedReveal delay={350}>
       <div className="flex flex-col gap-3 px-4 py-5">
         <motion.button
           onClick={onViewLeaderboard}
@@ -1543,9 +1608,12 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
           Dismiss
         </motion.button>
       </div>
+      </AnimatedReveal>
 
+      <AnimatedReveal delay={500}>
       <Divider />
       <TermsLinkOrange />
+      </AnimatedReveal>
     </>
   );
 }
@@ -1654,6 +1722,25 @@ export default function OptInCard({
   dismissed,
 }) {
   const showDismissedEmpty = dismissed && state === 'ended-missed';
+
+  // Warm the browser cache for state-card illustrations and reward icons on mount,
+  // so they're already decoded by the time a card animates in (avoids the flash
+  // where the card appears, then the image pops in a frame or two later).
+  useEffect(() => {
+    const assets = [
+      '/qualified-sparkles.png',
+      '/won-confetti.png',
+      '/won-2nd-confetti.png',
+      '/won-3rd-stars.png',
+      '/cash-icon.png',
+      '/game-icon-spins.png',
+    ];
+    assets.forEach((src) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = src;
+    });
+  }, []);
 
   return (
     <div style={{ background: '#f4f4f5' }}>
