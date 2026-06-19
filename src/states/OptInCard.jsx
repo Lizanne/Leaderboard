@@ -999,7 +999,12 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
             </div>
             <div
               className="flex items-center justify-center shrink-0 rounded-lg"
-              style={{ background: 'rgba(9,9,11,0.25)', width: 44, height: 44 }}
+              style={{
+                background: 'transparent',
+                border: '2px solid rgba(0, 0, 0, 0.25)',
+                width: 44,
+                height: 44,
+              }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -1123,7 +1128,12 @@ function LoadingState() {
           </div>
           <div
             className="flex items-center justify-center shrink-0 rounded-lg"
-            style={{ background: 'rgba(0,0,0,0.25)', width: 44, height: 44 }}
+            style={{
+              background: 'transparent',
+              border: '2px solid rgba(0, 0, 0, 0.25)',
+              width: 44,
+              height: 44,
+            }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
               <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -1267,7 +1277,12 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
           </div>
           <div
             className="flex items-center justify-center shrink-0 rounded-lg"
-            style={{ background: 'rgba(0,0,0,0.25)', width: 44, height: 44 }}
+            style={{
+              background: 'transparent',
+              border: '2px solid rgba(0, 0, 0, 0.25)',
+              width: 44,
+              height: 44,
+            }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
               <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -1573,7 +1588,7 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
               width: 44,
               height: 44,
               borderRadius: 8,
-              border: '2px solid rgba(0,0,0,0.30)',
+              border: '2px solid rgba(0, 0, 0, 0.25)',
             }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2">
