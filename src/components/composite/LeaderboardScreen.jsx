@@ -331,7 +331,7 @@ const YouCardGrid = ({ rank, score, prize, i, innerRef }) => (
       fontVariantNumeric: 'tabular-nums', lineHeight: '20px',
     }}>
       <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 800 }}>{lbFmt(score)}</span>
-      <span style={{ fontSize: 12, lineHeight: '20px', fontWeight: 600 }}>&nbsp;pts</span>
+      <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 400 }}>&nbsp;pts</span>
     </span>
     <span style={{
       display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end',
@@ -379,7 +379,7 @@ const YouCardStacked = ({ rank, score, inZone, prize, gap, i, innerRef, showTag 
     }}>
       <span style={{ fontVariantNumeric: 'tabular-nums' }}>
         <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 800 }}>{lbFmt(score)}</span>
-        <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 600 }}> pts</span>
+        <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 400 }}> pts</span>
       </span>
       <span style={{
         fontSize: 12, lineHeight: '16px', fontWeight: 700,
@@ -792,7 +792,7 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
               }}>
                 <span style={{ fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
                   <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 800, color: '#fff' }}>{lbFmt(user.score)}</span>
-                  <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 600, color: '#fff' }}> pts</span>
+                  <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 400, color: '#fff' }}> pts</span>
                 </span>
                 <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 700, color: '#FCD34D', whiteSpace: 'nowrap' }}>
                   Winning {userPrize}
@@ -808,7 +808,8 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
                 <span style={{ display: 'block', fontSize: 14, lineHeight: '20px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   <span style={{ fontWeight: 700, color: '#FFFFFF' }}>{user.rank}{lbOrdinal(user.rank)}</span>
                   <span style={{ fontWeight: 500, color: '#FFFFFF' }}> · </span>
-                  <span style={{ fontWeight: 700, color: '#fff' }}>{lbFmt(user.score)}pts</span>
+                  <span style={{ fontWeight: 700, color: '#fff' }}>{lbFmt(user.score)}</span>
+                  <span style={{ fontWeight: 400, color: '#fff' }}> pts</span>
                 </span>
               </span>
               {pinnedActionable ? (
