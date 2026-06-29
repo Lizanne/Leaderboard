@@ -1171,7 +1171,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
             alt=""
             aria-hidden="true"
             className="pointer-events-none absolute"
-            style={{ top: 16, right: 16, width: 124, height: 100, objectFit: 'contain' }}
+            style={{ top: 16, right: 16, width: 124, height: 100, objectFit: 'cover' }}
           />
 
           {/* Title: label + rank */}
