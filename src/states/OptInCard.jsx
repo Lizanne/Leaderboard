@@ -1165,14 +1165,28 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
           className="relative flex flex-col gap-4 overflow-hidden rounded-xl p-4"
           style={{ border: '2px solid #FAFAFA' }}
         >
-          {/* Sparkles illustration — top-right */}
-          <img
-            src="/qualified-sparkles.png"
-            alt=""
+          {/* Sparkles illustration — top-right. Matches Figma 16725:2049 exactly:
+              124x100 overflow-clip container, with the inner img scaled to
+              132.28% × 117.86% and offset -6.93% left, -9.52% top so the sparkles
+              fill (and slightly overflow) the box. */}
+          <div
             aria-hidden="true"
-            className="pointer-events-none absolute"
-            style={{ top: 16, right: 16, width: 124, height: 100, objectFit: 'cover' }}
-          />
+            className="pointer-events-none absolute overflow-hidden"
+            style={{ top: 16, right: 16, width: 124, height: 100 }}
+          >
+            <img
+              src="/qualified-sparkles.png"
+              alt=""
+              className="absolute"
+              style={{
+                left: '-6.93%',
+                top: '-9.52%',
+                width: '132.28%',
+                height: '117.86%',
+                maxWidth: 'none',
+              }}
+            />
+          </div>
 
           {/* Title: label + rank */}
           <div className="flex flex-col gap-1">
