@@ -43,14 +43,14 @@ const TOP_10 = [
 ];
 
 const TIERS = [
-  { range: '11th – 30th',   from: 11,  to: 30,  score: 2722, prize: '100 Free Spins' },
-  { range: '31st – 70th',   from: 31,  to: 70,  score: 2604, prize: '90 Free Spins' },
-  { range: '71st – 125th',  from: 71,  to: 125, score: 2532, prize: '75 Free Spins' },
-  { range: '126th – 194th', from: 126, to: 194, score: 2401, prize: '60 Free Spins' },
-  { range: '195th – 250th', from: 195, to: 250, score: 2256, prize: '50 Free Spins' },
-  { range: '251st – 300th', from: 251, to: 300, score: 2175, prize: '40 Free Spins' },
-  { range: '301st – 350th', from: 301, to: 350, score: 2072, prize: '30 Free Spins' },
-  { range: '351st – 400th', from: 351, to: 400, score: 1894, prize: '20 Free Spins' },
+  { range: '11th - 30th',   from: 11,  to: 30,  score: 2722, prize: '100 Free Spins' },
+  { range: '31st - 70th',   from: 31,  to: 70,  score: 2604, prize: '90 Free Spins' },
+  { range: '71st - 125th',  from: 71,  to: 125, score: 2532, prize: '75 Free Spins' },
+  { range: '126th - 194th', from: 126, to: 194, score: 2401, prize: '60 Free Spins' },
+  { range: '195th - 250th', from: 195, to: 250, score: 2256, prize: '50 Free Spins' },
+  { range: '251st - 300th', from: 251, to: 300, score: 2175, prize: '40 Free Spins' },
+  { range: '301st - 350th', from: 301, to: 350, score: 2072, prize: '30 Free Spins' },
+  { range: '351st - 400th', from: 351, to: 400, score: 1894, prize: '20 Free Spins' },
 ];
 
 const PRIZES = [
@@ -64,14 +64,14 @@ const PRIZES = [
   { place: '8th',  rank: 8,  prize: '£100', kind: 'Cash' },
   { place: '9th',  rank: 9,  prize: '£90',  kind: 'Cash' },
   { place: '10th', rank: 10, prize: '£75',  kind: 'Cash' },
-  { place: '11th – 30th',   prize: '100', kind: 'Free Spins' },
-  { place: '31st – 70th',   prize: '90',  kind: 'Free Spins' },
-  { place: '71st – 125th',  prize: '75',  kind: 'Free Spins' },
-  { place: '126th – 194th', prize: '60',  kind: 'Free Spins' },
-  { place: '195th – 250th', prize: '50',  kind: 'Free Spins' },
-  { place: '251st – 300th', prize: '40',  kind: 'Free Spins' },
-  { place: '301st – 350th', prize: '30',  kind: 'Free Spins' },
-  { place: '351st – 400th', prize: '20',  kind: 'Free Spins' },
+  { place: '11th - 30th',   prize: '100', kind: 'Free Spins' },
+  { place: '31st - 70th',   prize: '90',  kind: 'Free Spins' },
+  { place: '71st - 125th',  prize: '75',  kind: 'Free Spins' },
+  { place: '126th - 194th', prize: '60',  kind: 'Free Spins' },
+  { place: '195th - 250th', prize: '50',  kind: 'Free Spins' },
+  { place: '251st - 300th', prize: '40',  kind: 'Free Spins' },
+  { place: '301st - 350th', prize: '30',  kind: 'Free Spins' },
+  { place: '351st - 400th', prize: '20',  kind: 'Free Spins' },
 ];
 
 function lbOrdinal(n) {
@@ -527,7 +527,7 @@ function LeaderboardTab({ state, user, youRef }) {
 // Render a prize "place" string, splitting rank ordinal (semibold) from suffix (regular)
 // to match Figma: "1" 600 + "st" 400. Tier ranges render in semibold + " to " regular.
 function PrizePlace({ place }) {
-  const range = place.match(/^(\d+)(\w+)\s+–\s+(\d+)(\w+)$/);
+  const range = place.match(/^(\d+)(\w+)\s+-\s+(\d+)(\w+)$/);
   if (range) {
     const [, n1, s1, n2, s2] = range;
     return (
