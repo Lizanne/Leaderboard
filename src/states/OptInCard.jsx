@@ -863,8 +863,8 @@ function PreOptInState({ onOptIn }) {
 
         {/* Description block + divider + terms */}
         <div className="flex flex-col gap-3">
-          {/* Marketing description — 14px/20px medium with bold emphasis */}
-          <p className="text-[14px] font-medium leading-5" style={{ color: PRIMARY_TEXT }}>
+          {/* Marketing description — 14px/20px regular with bold emphasis */}
+          <p className="text-[14px] font-normal leading-5" style={{ color: PRIMARY_TEXT }}>
             Gee up for the <strong className="font-bold">Royal Ascot</strong> with a course of{' '}
             <strong className="font-bold">Cash</strong> or <strong className="font-bold">Free Spins</strong>{' '}
             up for grabs right out of the gate in our daily{' '}
