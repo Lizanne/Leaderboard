@@ -1554,7 +1554,7 @@ function EndedPrizeState({ rank, score, onViewLeaderboard, onDismiss }) {
   return (
     <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Leaderboard ends in <strong>14 hrs 42 mins</strong></>} dotColor="#22c55e" />
+      <CountdownRow text={<>Ended · Results available for <strong>3 days 22 hrs</strong></>} muted dotColor="rgba(250,250,250,0.4)" />
 
       {/* Position block — white-bordered card with sparkles (mirrors QualifiedState) */}
       <AnimatedPodium delay={0}>
