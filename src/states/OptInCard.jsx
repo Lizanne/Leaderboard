@@ -257,7 +257,7 @@ function AnimatedOptInRow({ delay = 0 }) {
       </div>
       <div className="flex-1">
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>Opt in</p>
-        <p className="text-[12px] leading-4" style={{ color: SECONDARY_TEXT, fontWeight: 600 }}>Complete</p>
+        <p className="text-[12px] leading-4" style={{ color: SECONDARY_TEXT, fontWeight: 500 }}>Complete</p>
       </div>
     </div>
   );
@@ -393,7 +393,7 @@ function AnimatedProgressRow({ progress = 0, delay = 0, label, hint, action, onA
 
       <div className="flex-1 min-w-0">
         <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>{label}</p>
-        <p className="text-[12px] leading-4" style={{ color: SECONDARY_TEXT, fontWeight: showCheck ? 600 : 500 }}>
+        <p className="text-[12px] leading-4" style={{ color: SECONDARY_TEXT, fontWeight: 500 }}>
           {showCheck ? 'Complete' : hint}
         </p>
       </div>
