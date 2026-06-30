@@ -11,12 +11,13 @@ const pageTransition = {
   exit: { opacity: 0, y: -10, scale: 0.97, transition: { duration: 0.3 } },
 };
 
-const STATES = ['opt-in', 'pre-qualified', 'just-qualified', 'ended-missed', 'ended-won', 'ended-won-2nd', 'ended-won-3rd'];
+const STATES = ['opt-in', 'pre-qualified', 'just-qualified', 'ended-missed', 'ended-prize', 'ended-won', 'ended-won-2nd', 'ended-won-3rd'];
 const STATE_LABELS = {
   'opt-in': 'Opt In',
   'pre-qualified': 'Qualifying',
   'just-qualified': 'Qualified',
   'ended-missed': 'Ended (No Prize)',
+  'ended-prize': 'Ended (Prize)',
   'ended-won': 'Ended Won 1st',
   'ended-won-2nd': 'Ended Won 2nd',
   'ended-won-3rd': 'Ended Won 3rd',
@@ -37,7 +38,7 @@ export default function App() {
     try { return localStorage.getItem(DISMISSED_KEY) === '1'; } catch { return false; }
   });
 
-  const isEnded = state === 'ended-missed' || state === 'ended-won' || state === 'ended-won-2nd' || state === 'ended-won-3rd';
+  const isEnded = state === 'ended-missed' || state === 'ended-prize' || state === 'ended-won' || state === 'ended-won-2nd' || state === 'ended-won-3rd';
 
   const handleDeposit = useCallback(() => setDeposit((d) => Math.min(20, d + Math.floor(Math.random() * 10) + 5)), []);
   const handlePlay = useCallback(() => setPlay((p) => Math.min(50, p + Math.floor(Math.random() * 18) + 8)), []);
@@ -82,6 +83,7 @@ export default function App() {
       case 'pre-qualified': setDeposit(0); setPlay(0); setScore(0); setRank(314); break;
       case 'just-qualified': setDeposit(20); setPlay(50); setScore(892); setRank(412); break;
       case 'ended-missed': setDeposit(20); setPlay(50); setScore(4); setRank(412); break;
+      case 'ended-prize': setDeposit(20); setPlay(50); setScore(3891); setRank(4); break;
       case 'ended-won': setDeposit(20); setPlay(50); setScore(1145); setRank(1); break;
       case 'ended-won-2nd': setDeposit(20); setPlay(50); setScore(1145); setRank(2); break;
       case 'ended-won-3rd': setDeposit(20); setPlay(50); setScore(1145); setRank(3); break;
@@ -149,7 +151,7 @@ export default function App() {
               </div>
               {/* Scrollable leaderboard content */}
               <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-                <LeaderboardScreen scenario={leaderboardScenario} />
+                <LeaderboardScreen scenario={leaderboardScenario} hidePinnedBar={state === 'pre-qualified'} hideInlineYou={state === 'pre-qualified'} />
               </div>
             </motion.div>
           )}
@@ -183,7 +185,10 @@ export default function App() {
 
       {/* Bottom tabs: state-jumper on promotions view, scenario-jumper on leaderboard view.
           paddingBottom adds the iOS safe-area inset so the tabs (and the leaderboard pinned bar
-          above them) clear the home indicator on real devices. */}
+          above them) clear the home indicator on real devices.
+          Hidden when viewing the leaderboard from Qualifying — that flow shows a stripped
+          leaderboard with no scenario tabs and no pinned bar. */}
+      {!(view === 'leaderboard' && state === 'pre-qualified') && (
       <div
         className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-[var(--color-border)] px-3 pt-2.5 z-50"
         style={{ paddingBottom: 'calc(0.625rem + env(safe-area-inset-bottom, 0px))' }}
@@ -216,6 +221,7 @@ export default function App() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }

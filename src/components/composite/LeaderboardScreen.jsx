@@ -4,7 +4,6 @@ import { motion } from 'motion/react';
 const SLIDE_IN_DURATION = 0.35;
 const BRAND_ORANGE = '#FF5D1F';
 const PRIZE_THRESHOLD = 400;
-const TOTAL_PLAYERS = 2412;
 
 // On-orange text — Figma uses white throughout, secondary in light alpha.
 const INK = '#FAFAFA';
@@ -30,16 +29,16 @@ const SCENARIOS = {
 // Player identifiers use a 2-letter prefix + asterisks + 3-digit suffix (CR**620** etc.)
 // — the asterisks are part of the displayed handle, masking the middle of the customer ref.
 const TOP_10 = [
-  { rank: 1,  name: 'CR**620**', score: 4218, prize: '£400 cash' },
-  { rank: 2,  name: 'HR**891**', score: 3891, prize: '£350 cash' },
-  { rank: 3,  name: 'SK**422**', score: 3422, prize: '£300 cash' },
-  { rank: 4,  name: 'MF**409**', score: 3409, prize: '£250 cash' },
-  { rank: 5,  name: 'AP**387**', score: 3387, prize: '£200 cash' },
-  { rank: 6,  name: 'GR**359**', score: 3359, prize: '£150 cash' },
-  { rank: 7,  name: 'VV**292**', score: 3292, prize: '£125 cash' },
-  { rank: 8,  name: 'BF**204**', score: 3204, prize: '£100 cash' },
-  { rank: 9,  name: 'CC**945**', score: 2945, prize: '£90 cash' },
-  { rank: 10, name: 'NN**894**', score: 2894, prize: '£75 cash' },
+  { rank: 1,  name: 'CR**620**', score: 4218, prize: '£400' },
+  { rank: 2,  name: 'HR**891**', score: 3891, prize: '£350' },
+  { rank: 3,  name: 'SK**422**', score: 3422, prize: '£300' },
+  { rank: 4,  name: 'MF**409**', score: 3409, prize: '£250' },
+  { rank: 5,  name: 'AP**387**', score: 3387, prize: '£200' },
+  { rank: 6,  name: 'GR**359**', score: 3359, prize: '£150' },
+  { rank: 7,  name: 'VV**292**', score: 3292, prize: '£125' },
+  { rank: 8,  name: 'BF**204**', score: 3204, prize: '£100' },
+  { rank: 9,  name: 'CC**945**', score: 2945, prize: '£90' },
+  { rank: 10, name: 'NN**894**', score: 2894, prize: '£75' },
 ];
 
 const TIERS = [
@@ -418,7 +417,7 @@ function PrizesColumnHeaders() {
   );
 }
 
-function LeaderboardTab({ state, user, youRef }) {
+function LeaderboardTab({ state, user, youRef, hideInlineYou = false }) {
   // top10 — inline replacement; grid layout aligns with table columns.
   if (state === 'top10') {
     const prize = getUserPrize('top10', user.rank);
@@ -426,7 +425,7 @@ function LeaderboardTab({ state, user, youRef }) {
       <div>
         <div style={{ padding: '0 16px' }}>
           {TOP_10.map((p, i) => (
-            p.rank === user.rank
+            p.rank === user.rank && !hideInlineYou
               ? <YouCardGrid key="you" rank={user.rank} score={user.score} prize={prize} i={i} innerRef={youRef} />
               : <PlayerRow key={`p-${p.rank}`} player={p} i={i} />
           ))}
@@ -451,7 +450,7 @@ function LeaderboardTab({ state, user, youRef }) {
             return (
               <span key={`t-${tier.range}`}>
                 <TierRow tier={tier} i={i} />
-                {isUserTier && (
+                {isUserTier && !hideInlineYou && (
                   <YouCardStacked
                     rank={user.rank}
                     score={user.score}
@@ -470,10 +469,7 @@ function LeaderboardTab({ state, user, youRef }) {
     );
   }
 
-  // outside — separator + YouCard + separator.
-  const lastTier = TIERS[TIERS.length - 1];
-  const playersAboveYou = Math.max(0, user.rank - lastTier.to - 1);
-  const playersBelowYou = Math.max(0, TOTAL_PLAYERS - user.rank);
+  // outside — YouCard only (separators above/below were removed).
   const gap = Math.max(0, user.rank - PRIZE_THRESHOLD);
 
   return (
@@ -482,43 +478,17 @@ function LeaderboardTab({ state, user, youRef }) {
         {TOP_10.map((p, i) => <PlayerRow key={`p-${p.rank}`} player={p} i={i} />)}
         {TIERS.map((tier, i) => <TierRow key={`t-${tier.range}`} tier={tier} i={TOP_10.length + i} />)}
 
-        <motion.div
-          custom={TOP_10.length + TIERS.length}
-          variants={rowVariants}
-          initial="initial"
-          animate="animate"
-          style={{
-            textAlign: 'center', padding: '12px 0',
-            fontSize: 12, lineHeight: '16px', fontWeight: 700, letterSpacing: '0.1em',
-            color: '#FFFFFF',
-          }}
-        >
-          - {playersAboveYou} players -
-        </motion.div>
-
-        <YouCardStacked
-          rank={user.rank}
-          score={user.score}
-          inZone={false}
-          gap={gap}
-          i={TOP_10.length + TIERS.length + 1}
-          innerRef={youRef}
-          showTag={false}
-        />
-
-        <motion.div
-          custom={TOP_10.length + TIERS.length + 2}
-          variants={rowVariants}
-          initial="initial"
-          animate="animate"
-          style={{
-            textAlign: 'center', padding: '12px 0',
-            fontSize: 12, lineHeight: '16px', fontWeight: 700, letterSpacing: '0.1em',
-            color: '#FFFFFF',
-          }}
-        >
-          - {lbFmt(playersBelowYou)} players below -
-        </motion.div>
+        {!hideInlineYou && (
+          <YouCardStacked
+            rank={user.rank}
+            score={user.score}
+            inZone={false}
+            gap={gap}
+            i={TOP_10.length + TIERS.length + 1}
+            innerRef={youRef}
+            showTag={false}
+          />
+        )}
       </div>
     </div>
   );
@@ -553,8 +523,8 @@ function PrizePlace({ place }) {
   return <span style={{ fontWeight: 600 }}>{place}</span>;
 }
 
-function PrizesTab({ state, user }) {
-  const youPrizePlace = getYouPrizePlace(state, user.rank);
+function PrizesTab({ state, user, hideInlineYou = false }) {
+  const youPrizePlace = hideInlineYou ? null : getYouPrizePlace(state, user.rank);
   // Highlight treatment is only for top10 (cash winners). Tier YOU row is plain.
   const highlightInline = state === 'top10';
   return (
@@ -628,7 +598,7 @@ function PrizesTab({ state, user }) {
   );
 }
 
-export default function LeaderboardScreen({ scenario = 'outside' }) {
+export default function LeaderboardScreen({ scenario = 'outside', hidePinnedBar = false, hideInlineYou = false }) {
   const [tab, setTab] = useState('Leaderboard');
   const [youVisible, setYouVisible] = useState(false);
   const youRef = useRef(null);
@@ -640,8 +610,9 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
   const inZone = state !== 'outside';
   const userPrize = getUserPrize(state, user.rank);
   // Pinned bar is hidden in top10 (both tabs) — the inline You treatment is the
-  // single source of truth so we never show two "you" markers.
-  const showPinnedBar = state !== 'top10';
+  // single source of truth so we never show two "you" markers. Callers (e.g. the
+  // Qualifying flow) can also force-hide it via hidePinnedBar.
+  const showPinnedBar = !hidePinnedBar && state !== 'top10';
 
   // Watch You card visibility; auto-hide pinned bar while it's on screen.
   // Re-bind when scenario/state/tab changes — the YouCard is re-mounted on each of these
@@ -725,8 +696,8 @@ export default function LeaderboardScreen({ scenario = 'outside' }) {
       {/* Tab content — re-mount on tab/scenario change to re-trigger stagger */}
       <div key={`${scenario}-${tab}`}>
         {tab === 'Leaderboard'
-          ? <LeaderboardTab state={state} user={user} youRef={youRef} />
-          : <PrizesTab state={state} user={user} />}
+          ? <LeaderboardTab state={state} user={user} youRef={youRef} hideInlineYou={hideInlineYou} />
+          : <PrizesTab state={state} user={user} hideInlineYou={hideInlineYou} />}
       </div>
 
       {/* Spacer so the sticky pinned bar (when present) clears the state-jumper at the bottom */}

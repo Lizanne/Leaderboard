@@ -1,5 +1,9 @@
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'motion/react';
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, createContext, useContext } from 'react';
+
+// When this context is true, AnimatedReveal/AnimatedPodium render children
+// without their entrance animation. Used by states that should appear instantly.
+const NoAnimateContext = createContext(false);
 
 /* ───────────────────────────────────────────
    Constants & Curves
@@ -433,9 +437,11 @@ function AnimatedProgressRow({ progress = 0, delay = 0, label, hint, action, onA
    ANIMATED REVEAL WRAPPER (slide up)
    ═══════════════════════════════════════════ */
 function AnimatedReveal({ delay = 0, children }) {
+  const noAnimate = useContext(NoAnimateContext);
   const ref = useRef(null);
 
   useEffect(() => {
+    if (noAnimate) return;
     const el = ref.current;
     if (!el) return;
 
@@ -456,7 +462,9 @@ function AnimatedReveal({ delay = 0, children }) {
     }, delay);
 
     return () => clearTimeout(t);
-  }, [delay]);
+  }, [delay, noAnimate]);
+
+  if (noAnimate) return <>{children}</>;
 
   return (
     <div ref={ref} style={{ opacity: 0, transform: 'translateY(12px)' }}>
@@ -469,9 +477,11 @@ function AnimatedReveal({ delay = 0, children }) {
 // Used for the "hero" position card on Qualified / Ended-Won states so it feels
 // rewarding instead of static. EndedNotWon uses AnimatedReveal (no scale-pop).
 function AnimatedPodium({ delay = 0, children }) {
+  const noAnimate = useContext(NoAnimateContext);
   const ref = useRef(null);
 
   useEffect(() => {
+    if (noAnimate) return;
     const el = ref.current;
     if (!el) return;
 
@@ -496,7 +506,9 @@ function AnimatedPodium({ delay = 0, children }) {
     }, delay);
 
     return () => clearTimeout(t);
-  }, [delay]);
+  }, [delay, noAnimate]);
+
+  if (noAnimate) return <>{children}</>;
 
   return (
     <div ref={ref} style={{ opacity: 0, transform: 'scale(0.88) translateY(8px)', transformOrigin: 'center' }}>
@@ -924,7 +936,7 @@ function PreOptInState({ onOptIn }) {
    STATE: QUALIFYING (pre-qualified)
    Hero + countdown + Qualifiers + Rewards(locked) + Withdraw + Terms
    ═══════════════════════════════════════════ */
-function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
+function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw, onViewLeaderboard }) {
   const [showOptOut, setShowOptOut] = useState(false);
 
   const OPT_IN_DELAY = 0;
@@ -938,7 +950,7 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
   return (
     <>
       <HeroImage />
-      <CountdownRow text={<><strong>14h 42m</strong> left to qualify</>} dotColor="#22c55e" />
+      <CountdownRow text={<><strong>14 hrs 42 mins</strong> left to qualify</>} dotColor="#22c55e" />
 
       {/* Qualifiers section */}
       <div className="px-4 pt-2 pb-2">
@@ -977,6 +989,28 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw }) {
         <p className="text-[14px] font-normal leading-5 px-4 pt-4 w-full" style={{ color: PRIMARY_TEXT, maxWidth: 'none' }}>
           To appear in the rankings, you must qualify first. Your play will still contribute to the leaderboard whilst qualifying.
         </p>
+      </AnimatedReveal>
+
+      {/* View leaderboard link (Figma 16930:3334) */}
+      <AnimatedReveal delay={REWARDS_DELAY}>
+        <div className="px-4 pt-4">
+          <motion.button
+            onClick={onViewLeaderboard}
+            whileTap={{ scale: 0.97 }}
+            className="flex w-full items-center justify-center gap-2 rounded-lg text-[16px] font-semibold cursor-pointer border-none bg-transparent"
+            style={{
+              color: '#FAFAFA',
+              height: 48,
+              lineHeight: '24px',
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            View leaderboard
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </motion.button>
+        </div>
       </AnimatedReveal>
 
       {/* Rewards — card style with lock icon */}
@@ -1154,9 +1188,9 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
   const PRIZE_THRESHOLD = 400;
 
   return (
-    <>
+    <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Leaderboard ends in <strong>14h 42m</strong></>} dotColor="#22c55e" />
+      <CountdownRow text={<>Leaderboard ends in <strong>14 hrs 42 mins</strong></>} dotColor="#22c55e" />
 
       {/* Content — Position block, white-bordered card with sparkles */}
       <AnimatedPodium delay={0}>
@@ -1286,7 +1320,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
               Cash & Free Spins Prizes!
             </p>
             <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
-              Keep in the top {PRIZE_THRESHOLD} to get a prize!
+              Finish in the top {PRIZE_THRESHOLD} to get a prize!
             </p>
           </div>
           <div
@@ -1311,7 +1345,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
       <Divider />
       <TermsLinkOrange />
       </AnimatedReveal>
-    </>
+    </NoAnimateContext.Provider>
   );
 }
 
@@ -1362,7 +1396,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
   const variant = WON_PODIUM_VARIANTS[rank] || WON_PODIUM_VARIANTS[1];
 
   return (
-    <>
+    <NoAnimateContext.Provider value={true}>
       <HeroImage />
       <CountdownRow text={<>Ended · <strong>2</strong> rewards to claim</>} muted dotColor="rgba(250,250,250,0.4)" />
 
@@ -1527,7 +1561,166 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
       <Divider />
       <TermsLinkOrange />
       </AnimatedReveal>
-    </>
+    </NoAnimateContext.Provider>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   STATE: ENDED (PRIZE)
+   Finished in the prize tier but off the podium (e.g. 4th).
+   Hero + countdown + Position card (white border + sparkles) +
+   Reward (£10 cash + Claim) + View final results + Dismiss + Terms
+   ═══════════════════════════════════════════ */
+function EndedPrizeState({ rank, score, onViewLeaderboard, onDismiss }) {
+  const suffix = getOrdinalSuffix(rank);
+
+  return (
+    <NoAnimateContext.Provider value={true}>
+      <HeroImage />
+      <CountdownRow text={<>Leaderboard ends in <strong>14 hrs 42 mins</strong></>} dotColor="#22c55e" />
+
+      {/* Position block — white-bordered card with sparkles (mirrors QualifiedState) */}
+      <AnimatedPodium delay={0}>
+      <div className="px-4 py-4">
+        <div
+          className="relative flex flex-col gap-4 overflow-hidden rounded-xl p-4"
+          style={{ border: '2px solid #FAFAFA' }}
+        >
+          {/* Sparkles illustration — top-right, Figma 16930:3232 (same dimensions as Qualified) */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute overflow-hidden"
+            style={{ top: 16, right: 16, width: 124, height: 100 }}
+          >
+            <img
+              src="/qualified-sparkles.png"
+              alt=""
+              className="absolute"
+              style={{
+                left: '-6.93%',
+                top: '-9.52%',
+                width: '132.28%',
+                height: '117.86%',
+                maxWidth: 'none',
+              }}
+            />
+          </div>
+
+          {/* Title: label + rank */}
+          <div className="flex flex-col gap-1">
+            <p className="text-[12px] font-semibold leading-4 uppercase" style={{ color: PRIMARY_TEXT, letterSpacing: '0.24px' }}>
+              Your position
+            </p>
+            <div className="flex items-baseline">
+              <span
+                className="text-[48px] font-extrabold leading-[48px]"
+                style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}
+              >
+                {rank}
+              </span>
+              <span className="text-[20px] font-bold leading-[30px]" style={{ color: PRIMARY_TEXT }}>
+                {suffix}
+              </span>
+            </div>
+          </div>
+
+          {/* Stats badge */}
+          <div
+            className="inline-flex items-center self-start rounded-md px-2 py-0.5"
+            style={{ background: 'rgba(0,0,0,0.5)', height: 20 }}
+          >
+            <span className="text-[12px] font-semibold leading-4" style={{ color: PRIMARY_TEXT, fontVariantNumeric: 'tabular-nums' }}>
+              {score.toLocaleString()} pts earned
+            </span>
+          </div>
+        </div>
+      </div>
+      </AnimatedPodium>
+
+      {/* Rewards — single cash prize card with Claim button */}
+      <div className="flex flex-col gap-4 px-4 pb-4">
+        <AnimatedReveal delay={250}>
+        <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
+          Rewards
+        </p>
+        </AnimatedReveal>
+
+        <AnimatedReveal delay={350}>
+        <div className="flex items-center gap-3 py-3 rounded-lg">
+          <div className="h-10 w-10 shrink-0 rounded-full overflow-hidden">
+            <img src="/cash-icon.png" alt="" className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
+              £10 cash prize
+            </p>
+            <p className="text-[12px] font-normal leading-4" style={{ color: PRIMARY_TEXT }}>
+              6 hrs and 40 mins left to claim
+            </p>
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="shrink-0 flex items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer"
+            style={{
+              background: 'rgba(0,0,0,0.25)',
+              color: PRIMARY_TEXT,
+              border: 'none',
+              height: 44,
+              paddingLeft: 16,
+              paddingRight: 16,
+              WebkitTapHighlightColor: 'transparent',
+              boxShadow: '0 1px 2px 0 rgba(10,13,18,0.05)',
+            }}
+          >
+            Claim
+          </motion.button>
+        </div>
+        </AnimatedReveal>
+      </div>
+
+      {/* Actions: View final results (primary) + Dismiss (secondary) */}
+      <AnimatedReveal delay={500}>
+      <div className="flex flex-col gap-3 px-4 py-5">
+        <motion.button
+          onClick={onViewLeaderboard}
+          whileTap={{ scale: 0.97 }}
+          className="flex w-full items-center justify-center gap-2 rounded-lg text-[16px] font-semibold cursor-pointer border-none"
+          style={{
+            background: 'rgba(0,0,0,0.25)',
+            color: PRIMARY_TEXT,
+            height: 48,
+            lineHeight: '24px',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+        >
+          View final results
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </motion.button>
+
+        <motion.button
+          onClick={onDismiss}
+          whileTap={{ scale: 0.97 }}
+          className="flex w-full items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer border-none bg-transparent"
+          style={{
+            color: PRIMARY_TEXT,
+            height: 48,
+            lineHeight: '24px',
+            opacity: 0.9,
+            WebkitTapHighlightColor: 'transparent',
+          }}
+        >
+          Dismiss
+        </motion.button>
+      </div>
+      </AnimatedReveal>
+
+      <AnimatedReveal delay={650}>
+      <Divider />
+      <TermsLinkOrange />
+      </AnimatedReveal>
+    </NoAnimateContext.Provider>
   );
 }
 
@@ -1539,9 +1732,9 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
   const suffix = getOrdinalSuffix(rank);
 
   return (
-    <>
+    <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Ended · Results available for <strong>3d 22h</strong></>} muted dotColor="rgba(250,250,250,0.4)" />
+      <CountdownRow text={<>Ended · Results available for <strong>3 days 22 hrs</strong></>} muted dotColor="rgba(250,250,250,0.4)" />
 
       {/* Position block — white-bordered card */}
       <AnimatedReveal delay={0}>
@@ -1583,9 +1776,6 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
       {/* Rewards */}
       <AnimatedReveal delay={200}>
       <div className="flex flex-col gap-4 px-4 pb-4">
-        <p className="text-[14px] font-bold leading-5" style={{ color: PRIMARY_TEXT }}>
-          Rewards
-        </p>
         <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
             <p className="text-[14px] font-semibold leading-5" style={{ color: PRIMARY_TEXT }}>
@@ -1656,7 +1846,7 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
       <Divider />
       <TermsLinkOrange />
       </AnimatedReveal>
-    </>
+    </NoAnimateContext.Provider>
   );
 }
 
@@ -1684,6 +1874,7 @@ function OrangeCard({
   const reachedFirst = rank === 1 && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
   const isQualified = !reachedFirst && (effectiveState === 'just-qualified' || effectiveState === 'qualified' || effectiveState === 'qualified-ranked' || effectiveState === 'ongoing-in-prizes');
   const isEndedWon = effectiveState === 'ended-won' || effectiveState === 'ended-won-2nd' || effectiveState === 'ended-won-3rd' || reachedFirst;
+  const isEndedPrize = effectiveState === 'ended-prize';
   const isEndedMissed = effectiveState === 'ended-missed';
 
   return (
@@ -1708,6 +1899,7 @@ function OrangeCard({
           onDeposit={onDeposit}
           onPlay={onPlay}
           onWithdraw={onWithdraw}
+          onViewLeaderboard={onViewLeaderboard}
         />
       )}
       {isQualified && (
@@ -1724,6 +1916,14 @@ function OrangeCard({
           rank={rank}
           score={score}
           onViewLeaderboard={onViewLeaderboard}
+        />
+      )}
+      {isEndedPrize && (
+        <EndedPrizeState
+          rank={rank}
+          score={score}
+          onViewLeaderboard={onViewLeaderboard}
+          onDismiss={onDismiss}
         />
       )}
       {isEndedMissed && (
@@ -1764,7 +1964,7 @@ export default function OptInCard({
   onDismiss,
   dismissed,
 }) {
-  const showDismissedEmpty = dismissed && state === 'ended-missed';
+  const showDismissedEmpty = dismissed && (state === 'ended-missed' || state === 'ended-prize');
 
   // Warm the browser cache for state-card illustrations and reward icons on mount,
   // so they're already decoded by the time a card animates in (avoids the flash
