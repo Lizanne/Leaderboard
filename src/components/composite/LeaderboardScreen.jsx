@@ -276,7 +276,7 @@ function TierRow({ tier, i }) {
     >
       <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
         <span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 700, color: INK }}>{tier.range}</span>
-        <span style={{ fontSize: 10.5, lineHeight: '14px', fontWeight: 700, color: INK }}>{tier.to - tier.from + 1} players</span>
+        <span style={{ fontSize: 12, lineHeight: '16px', fontWeight: 500, color: INK }}>{tier.to - tier.from + 1} players</span>
       </span>
       <span style={{ textAlign: 'right', fontSize: 14, lineHeight: '20px', fontWeight: 700, color: INK, fontVariantNumeric: 'tabular-nums' }}>
         {lbFmt(tier.score)}<span style={{ fontSize: 14, lineHeight: '20px', fontWeight: 400, color: INK }}> pts</span>
