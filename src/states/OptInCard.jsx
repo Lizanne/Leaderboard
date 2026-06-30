@@ -888,7 +888,7 @@ function PreOptInState({ onOptIn }) {
         <motion.button
           onClick={onOptIn}
           whileTap={{ scale: 0.96 }}
-          className="w-full rounded-lg text-[16px] font-bold border-none flex items-center justify-center"
+          className="w-full rounded-lg text-[16px] font-semibold border-none flex items-center justify-center"
           style={{
             background: 'rgba(0,0,0,0.25)',
             color: PRIMARY_TEXT,
