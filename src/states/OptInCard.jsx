@@ -950,7 +950,7 @@ function QualifyingState({ deposit, play, onDeposit, onPlay, onWithdraw, onViewL
   return (
     <>
       <HeroImage />
-      <CountdownRow text={<><strong>14 hrs 42 mins</strong> left to qualify</>} dotColor="#22c55e" />
+      <CountdownRow text={<><strong>14 hrs 42 mins</strong> left to qualify</>} dotColor="#FFFFFF" />
 
       {/* Qualifiers section */}
       <div className="px-4 pt-2 pb-2">
@@ -1190,7 +1190,7 @@ function QualifiedState({ rank, score, onPlayGame, onViewLeaderboard }) {
   return (
     <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Leaderboard ends in <strong>14 hrs 42 mins</strong></>} dotColor="#22c55e" />
+      <CountdownRow text={<>Leaderboard ends in <strong>14 hrs 42 mins</strong></>} dotColor="#FFFFFF" />
 
       {/* Content — Position block, white-bordered card */}
       <AnimatedPodium delay={0}>
@@ -1375,7 +1375,7 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
   return (
     <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Ended · <strong>2</strong> rewards to claim</>} muted dotColor="rgba(250,250,250,0.4)" />
+      <CountdownRow text={<>Ended · <strong>2</strong> rewards to claim</>} muted dotColor="rgba(255,255,255,0.60)" />
 
       {/* Position block — gradient card, white border, confetti */}
       <AnimatedPodium delay={0}>
@@ -1554,7 +1554,7 @@ function EndedPrizeState({ rank, score, onViewLeaderboard, onDismiss }) {
   return (
     <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Ended · Results available for <strong>3 days 22 hrs</strong></>} muted dotColor="rgba(250,250,250,0.4)" />
+      <CountdownRow text={<>Ended · Results available for <strong>3 days 22 hrs</strong></>} muted dotColor="rgba(255,255,255,0.60)" />
 
       {/* Position block — white-bordered card with sparkles (mirrors QualifiedState) */}
       <AnimatedPodium delay={0}>
@@ -1711,7 +1711,7 @@ function EndedNotWonState({ rank, score, onViewLeaderboard, onDismiss }) {
   return (
     <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Ended · Results available for <strong>3 days 22 hrs</strong></>} muted dotColor="rgba(250,250,250,0.4)" />
+      <CountdownRow text={<>Ended · Results available for <strong>3 days 22 hrs</strong></>} muted dotColor="rgba(255,255,255,0.60)" />
 
       {/* Position block — white-bordered card */}
       <AnimatedReveal delay={0}>
