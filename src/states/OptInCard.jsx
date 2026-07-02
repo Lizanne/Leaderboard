@@ -1548,13 +1548,13 @@ function EndedWonState({ rank, score, onViewLeaderboard }) {
    Hero + countdown + Position card (white border + sparkles) +
    Reward (£10 cash + Claim) + View final results + Dismiss + Terms
    ═══════════════════════════════════════════ */
-function EndedPrizeState({ rank, score, onViewLeaderboard, onDismiss }) {
+function EndedPrizeState({ rank, score, onViewLeaderboard }) {
   const suffix = getOrdinalSuffix(rank);
 
   return (
     <NoAnimateContext.Provider value={true}>
       <HeroImage />
-      <CountdownRow text={<>Ended · Results available for <strong>3 days 22 hrs</strong></>} muted dotColor="rgba(255,255,255,0.60)" />
+      <CountdownRow text={<>Ended · <strong>1</strong> reward to claim</>} muted dotColor="rgba(255,255,255,0.60)" />
 
       {/* Position block — white-bordered card with sparkles (mirrors QualifiedState) */}
       <AnimatedPodium delay={0}>
@@ -1655,7 +1655,7 @@ function EndedPrizeState({ rank, score, onViewLeaderboard, onDismiss }) {
         </AnimatedReveal>
       </div>
 
-      {/* Actions: View final results (primary) + Dismiss (secondary) */}
+      {/* Actions: View final results */}
       <AnimatedReveal delay={500}>
       <div className="flex flex-col gap-3 px-4 py-5">
         <motion.button
@@ -1674,21 +1674,6 @@ function EndedPrizeState({ rank, score, onViewLeaderboard, onDismiss }) {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAFAFA" strokeWidth="2.5">
             <path d="M9 6l6 6-6 6" />
           </svg>
-        </motion.button>
-
-        <motion.button
-          onClick={onDismiss}
-          whileTap={{ scale: 0.97 }}
-          className="flex w-full items-center justify-center rounded-lg text-[16px] font-semibold cursor-pointer border-none bg-transparent"
-          style={{
-            color: PRIMARY_TEXT,
-            height: 48,
-            lineHeight: '24px',
-            opacity: 0.9,
-            WebkitTapHighlightColor: 'transparent',
-          }}
-        >
-          Dismiss
         </motion.button>
       </div>
       </AnimatedReveal>
@@ -1900,7 +1885,6 @@ function OrangeCard({
           rank={rank}
           score={score}
           onViewLeaderboard={onViewLeaderboard}
-          onDismiss={onDismiss}
         />
       )}
       {isEndedMissed && (
@@ -1941,7 +1925,7 @@ export default function OptInCard({
   onDismiss,
   dismissed,
 }) {
-  const showDismissedEmpty = dismissed && (state === 'ended-missed' || state === 'ended-prize');
+  const showDismissedEmpty = dismissed && state === 'ended-missed';
 
   // Warm the browser cache for state-card illustrations and reward icons on mount,
   // so they're already decoded by the time a card animates in (avoids the flash
